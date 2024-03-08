@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('Portrety-vykladacha-Stepana-Fedynyaka004-1024x683.jpeg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  .container {
+    text-align: center;
+    position: relative;
+  }
+
+  .logo {
+    position: top;
+    top: 20px;
+    left: 20px;
+    width: 100px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .button {
+    background-color: #3498db;
+    color: white;
+    padding: 20px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 50px;
+    display: block;
+    width: 200px;
+    text-align: center;
+    width: 140%;
+  }
+    .logo {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+
+    .logo img {
+            width: 100px;
+            height: auto;
+        }
+
+  .button:last-child {
+    margin-bottom: 0;
+  }
+
+  .button:hover {
+    background-color: #2980b9;
+  }
+
+  .button-container {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+  }

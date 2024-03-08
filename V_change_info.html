@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Info</title>
+    <link rel="stylesheet" href="styles/styles_vladick.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('assets/standing-for-miracle-4k-xq-2560x1080.jpg');
+            /* шлях до вашого зображення */
+            background-size: cover;
+            /* Забезпечує, щоб зображення покривало весь екран */
+            background-position: center;
+            /* Зображення буде центруватися */
+        }
+
+        .change-info-container {
+            max-width: 600px;
+            /* Максимальна ширина контейнера */
+            margin: 0 auto;
+            /* Автоматичне центрування по горизонталі */
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Півпрозорий білий колір фону */
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            /* Центрування заголовка */
+        }
+
+        .input-field {
+            margin-bottom: 10px;
+            width: calc(100% - 10px);
+            /* Розрахунок ширини з відступами */
+            padding: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            /* Сіра рамка */
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .profile-photo {
+            margin: 20px auto;
+            /* Автоматичне центрування */
+            display: block;
+            /* Блочний елемент */
+            max-width: 200px;
+            /* Максимальна ширина фото */
+            height: auto;
+            /* Автоматична висота */
+            border-radius: 50%;
+            /* Круглий крій */
+        }
+
+        .profile-container {
+            text-align: center;
+            /* Центрування контейнера */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logo">
+        <img src="assets/image_vladick1.png">
+    </div>
+    <div class="change-info-container">
+        <h2>Change Info</h2>
+        <div class="profile-container">
+            <div>Current Name: <span id="old-name">John Doe</span></div>
+            <input type="text" class="input-field" placeholder="New First Name" id="new-first-name">
+            <input type="text" class="input-field" placeholder="New Last Name" id="new-last-name">
+            <button class="button" onclick="acceptChanges()">Accept</button>
+            <img src="assets/avatar.jpg" alt="Old Profile Photo" class="profile-photo">
+            <button class="button">Change Photo</button>
+            <button onclick="window.location.href='V_profile.html'" class="button">Return to Profile</button>
+        </div>
+
+
+
+        <script>
+            function acceptChanges() {
+                var newFirstName = document.getElementById("new-first-name").value;
+                var newLastName = document.getElementById("new-last-name").value;
+                document.getElementById("old-name").innerText = newFirstName + " " + newLastName;
+                // Можна також відправити дані на сервер для збереження
+            }
+        </script>
+</body>
+
+</html>

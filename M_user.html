@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<body style="background-color:rgb(67, 95, 198);">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Inputs and Buttons</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* background-color: #f0f0f0; */
+    background-image: url('assets/standing-for-miracle-4k-xq-2560x1080.jpg');
+  }
+
+  .container {
+    text-align: center;
+    position: center;
+  }
+
+  .logo {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 100px;
+    height: auto;
+  }
+
+  .input-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: 50px; /* Adjust height as needed */
+    width: 400px; /* Adjust width as needed */
+    margin: auto;
+  }
+
+  .text-input {
+    width: 100%; /* Full width of the container */
+    height: 50px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  .button {
+    background-color: #3498db;
+    color: white;
+    padding: 20px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  .profile {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 100px;
+    height: auto;
+  }
+  .button-container {
+    margin-top: 90px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <img src="image.png" alt="Logo" class="logo"> <!-- Logo added here -->
+  <div class="input-container">
+    <input type="text" class="text-input" placeholder="From where will we start?">
+    <input type="text" class="text-input" placeholder="Enter text...">
+    <input type="text" class="text-input" placeholder="Final destination">
+    <input type="text" class="text-input" placeholder="Add stops">
+  </div>
+  <div class="button-container">
+    <button class="button">See on a Map</button>
+    <button onclick="window.location.href='Y_your_driver.html'" class="button">Find a Driver</button>
+  </div>
+<div>
+  <img class="profile"  onclick="window.location.href='V_profile.html'" src="assets/image-41.png">
+</div>
+</body>
+</html>

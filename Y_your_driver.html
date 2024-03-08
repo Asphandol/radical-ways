@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Map</title>
+    <style>
+        /* body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+    } */
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-image: url('assets/standing-for-miracle-4k-xq-2560x1080.jpg');
+            background-size: cover;
+            background-position: center;
+
+        }
+
+        .profile-container {
+            width: 600px;
+            height: 550px;
+            bottom: 250px;
+            right: 90px;
+            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50px;
+            padding: 20px;
+            box-sizing: border-box;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cover_b {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.3);
+
+        }
+
+        .hello {
+            color: #fff;
+            position: relative;
+            top: 10%;
+            left: 19%;
+            font-size: 70px;
+            font-weight: bold;
+        }
+
+
+
+        .car_num {
+            font-size: 25px;
+            margin-top: -50px;
+            margin-left: 30px;
+
+        }
+
+        .text_num {
+            width: 300px;
+            height: 40px;
+            margin-left: 190px;
+            background-color: #569daa;
+            color: #fff;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+
+        }
+
+        .car_type {
+            font-size: 25px;
+            margin-top: 170px;
+            margin-left: 30px;
+
+        }
+
+        .text_type {
+            width: 300px;
+            height: 40px;
+            margin-left: 190px;
+            background-color: #569daa;
+            color: #fff;
+            /* background-color: rgba(255, 255, 255, 0.7); */
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+
+        }
+
+        .map-btn {
+            position: absolute;
+            bottom: 90px;
+            /* Adjust this value to control the distance from the bottom */
+            right: 17%;
+            /* Adjust this value to control the distance from the right */
+            box-shadow: 0 0.4rem 4.53rem #569daa;
+            background-color: #569daa;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 40px;
+            border: none;
+            cursor: pointer;
+            display: block;
+            width: auto;
+            /* Adjust this if you want the button to adjust its width based on content */
+            box-shadow: 0 0.4rem 4.53rem #569daa;
+            background-color: #569daa;
+            border-radius: 4.5rem;
+            text-align: center;
+        }
+
+        .rectangle {
+            width: 360px;
+            height: 40px;
+            margin-bottom: 10%;
+            margin-left: -73px;
+            font-size: 35px;
+            color: #fff;
+
+
+
+            border: 3px solid #fff;
+            /* Прямокутний контур білого кольору */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Центруємо контур по вертикалі */
+            margin-top: 700px;
+        }
+
+        .log img {
+            width: 5%;
+            /* Ширина зображення 100% ширини контейнера */
+            height: auto;
+            margin-bottom: 10%;
+            margin-left: 770px;
+            position: absolute;
+            top: 760px;
+
+        }
+
+
+        .driv {
+            width: 10%;
+            /* Ширина зображення 100% ширини контейнера */
+            height: auto;
+            margin-bottom: -780px;
+            margin-left: 70px;
+            position: absolute;
+            top: 200px;
+            left: 50px;
+
+        }
+
+        .profile {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="profile-container">
+
+        <div class="car_num">Car number:</div>
+        <div class="text_num">XXXXXXXX</div>
+        <div class="car_type">Car type:</div>
+        <div class="text_type">XXXXXXXX</div>
+    </div>
+
+    <div class="hello">Say Hello!</div>
+    <a href="#" class="map-btn">See on a Map</a>
+    <div class="rectangle">name | surname</div>
+    <div class="log">
+        <img src="assets/image-37-bg-hAn.png" alt="Зображення">
+    </div>
+    <div class="driv">
+        <img src="assets/vecteezyuser-icon-on-transparent-background19879186-1-b9p.png" alt="Зображення">
+    </div>
+    <div>
+        <img class="profile" onclick="window.location.href='V_profile.html'" src="assets/image-41.png">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+.hidden {
+    display: none;
+}
+.bimba {
+  width: 100%;
+}
+.mbord{
+  border: none
+}
+.bebemba{
+  zoom: 0.8;
+  overflow: hidden;
+}
+.bb{
+  border: none;
+  background: none;
+}
+.hidden {
+  display: none;
+}
+.bimba {
+background-size: cover;
+background-position: center;
+overflow: hidden;
+}
+.mbord{
+border: none
+}
+.gaslight{
+margin-top: 30px;
+box-shadow: 0 0.4rem 4.53rem #569daa;
+background-color: #569daa;
+color: #fff;
+text-decoration: none;
+border-radius: 5px;
+padding: 10px 20px;
+font-size: 16px;
+border: none;
+cursor: pointer;
+display: block;
+left: 0;
+top: 4rem;
+width: 26%;
+height: 26%;
+box-shadow: 0 0.4rem 4.53rem #569daa;
+background-color: #569daa;
+border-radius: 4.5rem;
+}
+
+.zoom{
+  zoom:0.8;
+  overflow: hidden;
+}
+
+.borders{
+  border: none;
+  background: none;
+  border-radius: 40%;
+  width: 10%;
+}
+
+.img_style{
+  width: 100%;
+}

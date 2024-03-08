@@ -1,0 +1,193 @@
+
+html {
+	font-size:62.5%;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+ul, li {
+	list-style: none;
+}
+input {
+	border: none;
+}
+body {
+  width: 192rem;
+}.main-jVg {
+  box-sizing: border-box;
+  padding: 5.5rem 3rem 14.2rem 3.5rem;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(119, 119, 119, 0.8000000119);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('../assets/main_town.jpg');
+}
+.main-jVg .auto-group-1iea-4H4 {
+  margin-bottom: 3.9rem;
+  width: 100%;
+  height: 19.5rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-1iea-4H4 .auto-group-wog2-yev {
+  height: 100%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('../assets/image-37-bg-9ZQ.png');
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-1iea-4H4 .auto-group-wog2-yev .image-38-93c {
+  width: 22.8rem;
+  height: 19.5rem;
+  object-fit: cover;
+  vertical-align: top;
+}
+.main-jVg .auto-group-1iea-4H4 .auto-group-2ken-3en {
+  box-sizing: border-box;
+  padding: 1.8rem 0rem 0rem 0.6rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-1iea-4H4 .auto-group-2ken-3en .auto-group-jn4e-k3Q {
+  margin: 1.95rem 73.6rem 2.55rem 0rem;
+  width: 59.3rem;
+  height: calc(100% - 4.5rem);
+  position: relative;
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-1iea-4H4 .auto-group-2ken-3en .auto-group-jn4e-k3Q .radical-ways-sNv {
+  width: 59.3rem;
+  height: 13.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  font-size: 9.6rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #000000;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.main-jVg .auto-group-1iea-4H4 .auto-group-2ken-3en .auto-group-jn4e-k3Q .radical-ways-aYE {
+  width: 59.3rem;
+  height: 13.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  font-size: 9.6rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #000000;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.main-jVg .auto-group-1iea-4H4 .auto-group-2ken-3en .vecteezyuser-icon-on-transparent-background19879186-1-6Wa {
+  width: 29.2rem;
+  height: 17.7rem;
+  cursor: pointer;
+  object-fit: cover;
+  vertical-align: top;
+  flex-shrink: 0;
+}
+.main-jVg .your-order--QXG {
+  margin: 0rem 0rem 1.8rem 13.7rem;
+  font-size: 4.8rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.main-jVg .text-field-Ku8 {
+  margin: 0rem 14.6rem 23.7rem 11.4rem;
+  width: calc(100% - 26rem);
+  height: 15.9rem;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #000000;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-jqwi-zEa {
+  margin: 0rem 2.2rem 0rem 1.4rem;
+  width: calc(100% - 3.6rem);
+  height: 16.3rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-jqwi-zEa .auto-group-v7vv-3yY {
+  margin-right: 9.9rem;
+  width: 54rem;
+  height: 100%;
+  display: flex;
+  font-size: 6.4rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #ffffff;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.4rem 4.53rem #569daa;
+  background-color: #569daa;
+  border-radius: 4.5rem;
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-jqwi-zEa .auto-group-ug38-WcE {
+  margin-right: 10rem;
+  width: 54rem;
+  height: 100%;
+  display: flex;
+  font-size: 6.4rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #ffffff;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.4rem 4.53rem #569daa;
+  background-color: #569daa;
+  border-radius: 4.5rem;
+  flex-shrink: 0;
+}
+.main-jVg .auto-group-jqwi-zEa .auto-group-upas-PAE {
+  width: 54rem;
+  height: 100%;
+  display: flex;
+  font-size: 6.4rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #f1f1f1;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.4rem 4.53rem #569daa;
+  background-color: #569daa;
+  border-radius: 4.5rem;
+  flex-shrink: 0;
+}

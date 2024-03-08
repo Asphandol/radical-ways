@@ -1,0 +1,369 @@
+
+html {
+	font-size:62.5%;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+ul, li {
+	list-style: none;
+}
+input {
+	border: none;
+}
+body {
+  width: 192rem;
+}.create-an-account-as-driver-mUa {
+  box-sizing: border-box;
+  padding: 10.8rem 28.3rem 10.9rem 21rem;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: solid 0.1rem #000000;
+  background-color: #f1f1f1;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('../assets/create-an-account-as-driver-bg.png');
+}
+.create-an-account-as-driver-mUa .auto-group-azm4-HSv {
+  margin: 0rem 20.3rem 13.8rem 0rem;
+  width: 46.4rem;
+  height: 13.2rem;
+  position: relative;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .auto-group-azm4-HSv .welcome-Amc {
+  width: 46.4rem;
+  height: 13.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  font-size: 9.6rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #ffffff;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.create-an-account-as-driver-mUa .auto-group-azm4-HSv .welcome-UXQ {
+  width: 46.4rem;
+  height: 13.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  font-size: 9.6rem;
+  font-weight: 700;
+  line-height: 1.365;
+  color: #ffffff;
+  font-family: Manrope, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN {
+  box-sizing: border-box;
+  padding: 0rem 0.4rem 0rem 11.1rem;
+  height: 86.3rem;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  background-color: rgba(241, 241, 241, 0.6700000167);
+  border-radius: 2.4rem;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 {
+  margin: 0rem 3.9rem 0.8rem 0rem;
+  width: 53.4rem;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-b7dx-3yp {
+  box-sizing: border-box;
+  padding-bottom: 2.3rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-b7dx-3yp .create-an-account-CLv {
+  margin-bottom: 2.4rem;
+  display: flex;
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #333333;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-b7dx-3yp .frame-750-WsQ {
+  margin-right: 43.7rem;
+  width: calc(100% - 43.7rem);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-b7dx-3yp .frame-750-WsQ .frame-1022-4e2 {
+  margin: 0rem 1rem 0.1rem 0rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  object-fit: contain;
+  vertical-align: top;
+  border-radius: 0.6rem;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-b7dx-3yp .frame-750-WsQ .driver-Zan {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 500;
+  line-height: 1.2125;
+  color: #000000;
+  font-family: Inter, 'Source Sans Pro';
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE {
+  width: 100%;
+  height: 73rem;
+  position: relative;
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-bXU {
+  box-sizing: border-box;
+  padding-bottom: 2.5rem;
+  width: 53.4rem;
+  height: 11.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-bXU .frame-243-KyG {
+  margin-bottom: 0.4rem;
+  width: 52.5137rem;
+  height: 2.7rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-bXU .text-field-eEr {
+  width: 100%;
+  height: 5.6rem;
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-NwY {
+  box-sizing: border-box;
+  padding-bottom: 2.5rem;
+  width: 53.4rem;
+  height: 11.2rem;
+  position: absolute;
+  left: 0;
+  top: 11.1rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-NwY .frame-243-JKQ {
+  margin-bottom: 0.4rem;
+  width: 52.5137rem;
+  height: 2.7rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-NwY .text-field-QtE {
+  width: 100%;
+  height: 5.6rem;
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-MYa {
+  box-sizing: border-box;
+  padding-bottom: 2.5rem;
+  width: 53.4rem;
+  height: 11.2rem;
+  position: absolute;
+  left: 0;
+  top: 22.2rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-MYa .frame-243-gqk {
+  margin-bottom: 0.4rem;
+  width: 52.5137rem;
+  height: 2.7rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-MYa .text-field-ZPk {
+  width: 100%;
+  height: 5.6rem;
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-JML {
+  box-sizing: border-box;
+  padding-bottom: 2.5rem;
+  width: 53.4rem;
+  height: 11.2rem;
+  position: absolute;
+  left: 0;
+  top: 33.3rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-JML .frame-243-q6N {
+  margin-bottom: 0.4rem;
+  width: 52.5137rem;
+  height: 2.7rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-JML .text-field-vtW {
+  width: 100%;
+  height: 5.6rem;
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-4zi {
+  box-sizing: border-box;
+  padding-bottom: 2.5rem;
+  width: 53.4rem;
+  height: 11.2rem;
+  position: absolute;
+  left: 0;
+  top: 44.4rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-4zi .frame-243-ohQ {
+  margin-bottom: 0.4rem;
+  width: 52.5137rem;
+  height: 2.7rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-4zi .frame-243-ohQ .frame-243-ohQ-sub-0 {
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-4zi .frame-243-ohQ .frame-243-ohQ-sub-1 {
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #e60000;
+  font-family: Poppins, 'Source Sans Pro';
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-4zi .text-field-qR8 {
+  width: 100%;
+  height: 5.6rem;
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-mZg {
+  box-sizing: border-box;
+  padding-bottom: 2.5rem;
+  width: 53.4rem;
+  height: 11.2rem;
+  position: absolute;
+  left: 0;
+  top: 55.5rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-mZg .frame-243-uQz {
+  margin-bottom: 0.4rem;
+  width: 52.5137rem;
+  height: 2.7rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-mZg .frame-243-uQz .frame-243-uQz-sub-0 {
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-mZg .frame-243-uQz .frame-243-uQz-sub-1 {
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #e70000;
+  font-family: Poppins, 'Source Sans Pro';
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-mZg .frame-243-uQz .frame-243-uQz-sub-2 {
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .email-mZg .text-field-zKx {
+  width: 100%;
+  height: 5.6rem;
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 1.2rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .button-6dt {
+  box-sizing: border-box;
+  padding: 1.5rem 16.25rem 1.6rem 16.25rem;
+  width: 53.4rem;
+  height: 6.4rem;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 66.6rem;
+  overflow: hidden;
+  background-color: #569daa;
+  border-radius: 4rem;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .frame-236-KH8 .auto-group-elzl-ecE .button-6dt .frame-276-zzA {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #ffffff;
+  font-family: Poppins, 'Source Sans Pro';
+  white-space: nowrap;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .auto-group-4uyp-u5Y {
+  margin-top: 76.5rem;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('../assets/image-37-bg-t9C.png');
+  flex-shrink: 0;
+}
+.create-an-account-as-driver-mUa .create-an-account-PeN .auto-group-4uyp-u5Y .image-38-4DL {
+  width: 7.2rem;
+  height: 6.4rem;
+  object-fit: cover;
+  vertical-align: top;
+}

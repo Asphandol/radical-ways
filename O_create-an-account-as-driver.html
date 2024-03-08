@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <title>Create an account as driver</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins%3A400%2C500"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter%3A500"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Manrope%3A700"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500%2C700"/>
+  <link rel="stylesheet" href="./styles/create-an-account-as-driver.css"/>
+  <link rel="stylesheet" type="text/css" href="styles/driver_user.css">
+</head>
+<body class = 'bebemba' class = 'bimba'>
+<div class="create-an-account-as-driver-mUa">
+  <div class="auto-group-azm4-HSv">
+    <div class="welcome-Amc">Welcome!</div>
+    <div class="welcome-UXQ">Welcome!</div>
+  </div>
+  <div class="create-an-account-PeN">
+    <div class="frame-236-KH8">
+      <div class="auto-group-b7dx-3yp">
+        <div class="create-an-account-CLv">Create an account</div>
+        <div class="frame-750-WsQ">
+          <button type ="button" onclick ='toggleHiddenFields()' class = 'bb' class = mbord >
+            <img class="frame-1022-4e2" src="./assets/frame-1022.png"/>
+          </button>
+          <p class="driver-Zan">Driver</p>
+        </div>
+      </div>
+      <div class="auto-group-elzl-ecE">
+        <div class="email-bXU">
+          <div class="frame-243-KyG">First name</div>
+          <input class="text-field-eEr" id="field1" name="field1">
+        </input>
+        </div>
+        <div class="email-NwY">
+          <div class="frame-243-JKQ">Last name</div>
+          <input class="text-field-QtE" id="field2" name="field2">
+        </input>
+        </div>
+        <div class="email-MYa">
+          <div class="frame-243-gqk">Email</div>
+          <input class="text-field-ZPk" id="field3" name="field3">
+        </input>
+        </div>
+        <div class="email-JML">
+          <div class="frame-243-q6N">Password</div>
+          <input class="text-field-vtW" id="field4" name="field4">
+        </input>
+        </div>
+        <div class="email-4zi">
+          <div class="frame-243-ohQ">
+            <span class="frame-243-ohQ-sub-0" class = 'hidden'>Car </span>
+          </div>
+          <input class="text-field-qR8" class ='hidden' id="field5" name="field5">
+        </input>
+        </div>
+        <div class="email-mZg">
+          <div class="frame-243-uQz">
+            <span class="frame-243-uQz-sub-0" class ='hidden'>Car’s license number </span>
+            <span class="frame-243-uQz-sub-2"> </span>
+          </div>
+          <input class="text-field-zKx" class ='hidden' id="field6" name="field6">
+        </input>
+        </div>
+        <div class="button-6dt">
+          <a class="frame-276-zzA"  onclick="window.location.href='M_user.html'" onclick="submitForm()">Create an account</a>
+        </div>
+      </div>
+    </div>
+    <div class="auto-group-4uyp-u5Y">
+      <img class="image-38-4DL" src="./assets/image-38-zU6.png"/>
+    </div>
+  </div>
+</div>
+
+<script src="javascrpt/my_js.js">
+  function submitForm() {
+      var field1Value = document.getElementById("field1").value;
+      var field2Value = document.getElementById("field2").value;
+      var field3Value = document.getElementById("field3").value;
+      var field4Value = document.getElementById("field4").value;
+      var field5Value = document.getElementById("field5").value;
+      var field6Value = document.getElementById("field6").value;
+      
+      console.log("Значення полів:");
+      console.log("Поле 1: " + field1Value);
+      console.log("Поле 2: " + field2Value);
+      console.log("Поле 3: " + field3Value);
+      console.log("Поле 4: " + field4Value);
+      console.log("Поле 5: " + field5Value);
+      console.log("Поле 6: " + field6Value);
+  }
+  
+  function toggleHiddenFields() {
+    var hiddenFields = document.querySelectorAll(".email-4zi, .email-mZg");
+    for (var i = 0; i < hiddenFields.length; i++) {
+        if (hiddenFields[i].classList.contains("hidden")) {
+            hiddenFields[i].classList.remove("hidden");
+            var inputField = hiddenFields[i].querySelector("input");
+            if (inputField) {
+                inputField.value = "";
+            }
+        } else {
+            hiddenFields[i].classList.add("hidden");
+            var inputField = hiddenFields[i].querySelector("input");
+            if (inputField) {
+                inputField.value = "";
+            }
+        }
+    }
+    var buttonImage = document.querySelector('.frame-1022-4e2');
+      if (buttonImage.src.includes('frame-1022.png')) {
+          buttonImage.src = './assets/black_button.png';
+      } else {
+          buttonImage.src = './assets/frame-1022.png';
+      }
+}
+
+</script>
+
+</body>
