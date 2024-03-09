@@ -28,11 +28,17 @@ class LogicSystem:
         db = client["Radical_ways"]
         return db["accounts"]
 
-    def log_in(self):
+    def log_in(self, data: dict):
         """
         logging in a person
         """
-        pass
+        if data["mail"] in self.get_database.find_one():
+            raise TypeError("There is no account with such mail")
+        if data["mail"] != self.get_database.find_one()[data["password"]]:
+            raise TypeError("There is no account with such mail")
+        data = {"mail": "shtohryn.pn@ucu.edu.ua", "password": "nadvirna4ever"}
+        result = self.get_database.find_one(data)
+        return "Welcome back, " + result['name'].capitalize()
 
     def sign_up(self):
         """
