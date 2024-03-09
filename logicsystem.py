@@ -22,11 +22,11 @@ class LogicSystem:
         """
         pass
 
+    @property
     def get_database(self):
-        """
-        gets database about persons
-        """
-        pass
+        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        db = client["Radical_ways"]
+        return db["accounts"]
 
     def log_in(self):
         """
