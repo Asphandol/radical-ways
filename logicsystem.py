@@ -10,11 +10,12 @@ class LogicSystem:
     """
     __not_finished_orders = []
 
-    def delete_person(self):
+    def delete_person(self, data: dict):
         """
         delets person from app
         """
-        pass
+        self.get_database.delete_one(data)
+        return "Account has been successfully deleted"
 
     def change_info(self):
         """
