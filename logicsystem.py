@@ -34,11 +34,13 @@ class LogicSystem:
         """
         pass
 
-    def sign_up(self):
+    def sign_up(self, data: dict):
         """
         helps a new person to sign up
         """
-        pass
+        # data = {"mail": "melnyk.pn@ucu.edu.ua", "password": "watch__us", "is_driver": False}
+        self.get_database.insert_one(data)
+        return data["name"] + ", Thank you for joining us"
 
     def sign_out(self):
         """
