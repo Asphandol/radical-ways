@@ -1,95 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-<body style="background-color:rgb(67, 95, 198);">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text Inputs and Buttons</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /* background-color: #f0f0f0; */
-    background-image: url('assets/standing-for-miracle-4k-xq-2560x1080.jpg');
-  }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="styles/general.css">
+	<style>
+		.order-container {
+			width: 600px;
+			background-color: rgba(255, 255, 255, 0.8);
+			border-radius: 10px;
+			padding: 20px;
+			box-sizing: border-box;
+			text-align: center;
+			align-content: center;
+			align-items: center;
+			text-align: center;
+		}
 
-  .container {
-    text-align: center;
-    position: center;
-  }
+		.input-field {
+			margin-bottom: 10px;
+			width: 49%;
+			padding: 5px;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+		}
 
-  .logo {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    width: 100px;
-    height: auto;
-  }
+		.output-field {
+			background-color: #fff;
+			width: auto;
+			padding: 5px;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+		}
 
-  .input-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    height: 50px; /* Adjust height as needed */
-    width: 400px; /* Adjust width as needed */
-    margin: auto;
-  }
+		h1 {
+			color: #333;
+		}
 
-  .text-input {
-    width: 100%; /* Full width of the container */
-    height: 50px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
+		p {
+			color: #666;
+		}
 
-  .button {
-    background-color: #3498db;
-    color: white;
-    padding: 20px 40px;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  .profile {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 100px;
-    height: auto;
-  }
-  .button-container {
-    margin-top: 90px;
-  }
-</style>
+		a {
+			color: #569DAA;
+			text-decoration: none;
+		}
+
+		.profile {
+			position: fixed;
+			top: 10px;
+			right: 10px;
+			width: 100px;
+			height: auto;
+		}
+	</style>
 </head>
+
 <body>
-<div class="container">
-  <img src="image.png" alt="Logo" class="logo"> <!-- Logo added here -->
-  <div class="input-container">
-    <input type="text" class="text-input" placeholder="From where will we start?">
-    <input type="text" class="text-input" placeholder="Enter text...">
-    <input type="text" class="text-input" placeholder="Final destination">
-    <input type="text" class="text-input" placeholder="Add stops">
-  </div>
-  <div class="button-container">
-    <button class="button">See on a Map</button>
-    <button onclick="window.location.href='Y_your_driver.html'" class="button">Find a Driver</button>
-  </div>
-<div>
-  <img class="profile"  onclick="window.location.href='V_profile.html'" src="assets/image-41.png">
-</div>
+	<div class="logo">
+		<img src="assets/logo.png">
+	</div>
+	<div class="order-container">
+		<input class="input-field" type="text" id="start" placeholder="Початок"><br><br>
+		<input class="input-field" type="text" id="end" placeholder="Кінець"><br><br>
+		<input class="input-field" type="text" id="waypoint" placeholder="Проміжні точки"><br><br>
+		<div class="output-field" id="formattedWaypoints">&nbsp;</div>
+	</div>
+	<div>
+		<img class="profile" onclick="window.location.href='V_profile.html'" src="assets/transperent_person.png">
+	</div>
 </body>
+<script>
+	var waypoints = [];
+
+	function addWaypoint() {
+		var waypointInput = document.getElementById("waypoint");
+		var waypointValue = waypointInput.value.trim();
+		if (waypointValue !== "") {
+			waypoints.push(waypointValue);
+			updateFormattedWaypoints();
+			waypointInput.value = "";
+		}
+	}
+
+	function updateFormattedWaypoints() {
+		var formattedWaypointsDiv = document.getElementById("formattedWaypoints");
+		var start = document.getElementById("start").value.trim();
+		var end = document.getElementById("end").value.trim();
+		var allWaypoints = [start].concat(waypoints, [end]);
+		formattedWaypointsDiv.textContent = allWaypoints.join(", ");
+	}
+
+	document.getElementById("waypoint").addEventListener("keypress", function (event) {
+		if (event.key === "Enter") {
+			addWaypoint();
+		}
+	});
+</script>
+
 </html>

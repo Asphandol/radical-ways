@@ -5,30 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Account</title>
-    <link rel="stylesheet" href="styles/styles_vladick.css">
+    <link rel="stylesheet" href="styles/general.css">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-image: url('assets/standing-for-miracle-4k-xq-2560x1080.jpg');
-            /* шлях до вашого зображення */
-            background-size: cover;
-            /* Забезпечує, щоб зображення покривало весь екран */
-            background-position: center;
-            /* Зображення буде центруватися */
-        }
-
         .delete-account-container {
             max-width: 600px;
-            /* Максимальна ширина контейнера */
             margin: 0 auto;
-            /* Автоматичне центрування по горизонталі */
             background-color: rgba(255, 255, 255, 0.8);
-            /* Півпрозорий білий колір фону */
             border-radius: 10px;
             padding: 20px;
             box-sizing: border-box;
@@ -36,37 +18,34 @@
 
         h2 {
             text-align: center;
-            /* Центрування заголовка */
         }
 
         .input-field {
             margin-bottom: 10px;
             width: calc(100% - 10px);
-            /* Розрахунок ширини з відступами */
             padding: 5px;
             box-sizing: border-box;
             border: 1px solid #ccc;
-            /* Сіра рамка */
             border-radius: 5px;
             font-size: 16px;
         }
 
         .profile-container {
             text-align: center;
-            /* Центрування контейнера */
         }
     </style>
 </head>
 
 <body>
     <div class="logo">
-        <img src="styles/image.png">
+        <img src="assets/logo.png">
     </div>
     <div class="delete-account-container">
         <h2>Delete Account</h2>
         <div class="profile-container">
             <input type="text" class="input-field" placeholder="Accept your password">
-            <button onclick="window.location.href='O_start-page.html'" class="button">Delete</button> <!--  onclick="deleteAccount()" -->
+            <button onclick="window.location.href='O_start-page.html'" class="button">Delete</button>
+            <!--  onclick="deleteAccount()" -->
             <button onclick="window.location.href='V_profile.html'" class="button">Return to Profile</button>
         </div>
 

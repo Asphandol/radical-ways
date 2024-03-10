@@ -1,175 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<body>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/general.css">
     <title>Hello Map</title>
     <style>
-        /* body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-    } */
-        body {
-            font-family: 'Poppins', sans-serif;
-            font-size: 18px;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            background-image: url('assets/standing-for-miracle-4k-xq-2560x1080.jpg');
-            background-size: cover;
-            background-position: center;
-
-        }
-
-        .profile-container {
-            width: 600px;
-            height: 550px;
-            bottom: 250px;
-            right: 90px;
+        .info-container {
+            width: 400px;
+            height: 500px;
             background-color: #fff;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
             padding: 20px;
             box-sizing: border-box;
             position: absolute;
+            right: 10%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-        }
-
-        .cover_b {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background-color: #fff;
-            background-color: rgba(255, 255, 255, 0.3);
-
-        }
-
-        .hello {
-            color: #fff;
-            position: relative;
-            top: 10%;
-            left: 19%;
-            font-size: 70px;
-            font-weight: bold;
-        }
-
-
-
-        .car_num {
-            font-size: 25px;
-            margin-top: -50px;
-            margin-left: 30px;
-
-        }
-
-        .text_num {
-            width: 300px;
-            height: 40px;
-            margin-left: 190px;
-            background-color: #569daa;
-            color: #fff;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-
-        }
-
-        .car_type {
-            font-size: 25px;
-            margin-top: 170px;
-            margin-left: 30px;
-
-        }
-
-        .text_type {
-            width: 300px;
-            height: 40px;
-            margin-left: 190px;
-            background-color: #569daa;
-            color: #fff;
-            /* background-color: rgba(255, 255, 255, 0.7); */
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-
-        }
-
-        .map-btn {
-            position: absolute;
-            bottom: 90px;
-            /* Adjust this value to control the distance from the bottom */
-            right: 17%;
-            /* Adjust this value to control the distance from the right */
-            box-shadow: 0 0.4rem 4.53rem #569daa;
-            background-color: #569daa;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 40px;
-            border: none;
-            cursor: pointer;
-            display: block;
-            width: auto;
-            /* Adjust this if you want the button to adjust its width based on content */
-            box-shadow: 0 0.4rem 4.53rem #569daa;
-            background-color: #569daa;
-            border-radius: 4.5rem;
-            text-align: center;
-        }
-
-        .rectangle {
-            width: 360px;
-            height: 40px;
-            margin-bottom: 10%;
-            margin-left: -73px;
-            font-size: 35px;
-            color: #fff;
-
-
-
-            border: 3px solid #fff;
-            /* Прямокутний контур білого кольору */
-            display: flex;
             justify-content: center;
             align-items: center;
-            /* Центруємо контур по вертикалі */
-            margin-top: 700px;
         }
 
-        .log img {
-            width: 5%;
-            /* Ширина зображення 100% ширини контейнера */
-            height: auto;
-            margin-bottom: 10%;
-            margin-left: 770px;
+        .driver-container {
+            width: 300px;
+            height: 600px;
+            padding: 20px;
+            /* box-sizing: border-box; */
             position: absolute;
-            top: 760px;
-
+            left: 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
 
-        .driv {
-            width: 10%;
-            /* Ширина зображення 100% ширини контейнера */
-            height: auto;
-            margin-bottom: -780px;
-            margin-left: 70px;
-            position: absolute;
-            top: 200px;
-            left: 50px;
+        .name-of-driver {
+            width: 100%;
+            margin-top: 5%;
+            font-size: 35px;
+            color: #fff;
+            border: 3px solid #fff;
+            justify-content: center;
+            align-items: center;
+        }
 
+
+        .driver-photo {
+            width: 100%;
         }
 
         .profile {
@@ -180,29 +61,27 @@
             height: auto;
         }
     </style>
-</head>
 
-<body>
+    <div class="logo">
+        <img src="assets/logo.png">
+    </div>
 
-    <div class="profile-container">
-
-        <div class="car_num">Car number:</div>
+    <div class="info-container">
+        <h2>Car number:</h2>
         <div class="text_num">XXXXXXXX</div>
-        <div class="car_type">Car type:</div>
+        <h2>Car type:</h2>
         <div class="text_type">XXXXXXXX</div>
+        <button onclick="window.location.href='map.html'" class="button" style="width: 50%;">See on a map</button>
     </div>
 
-    <div class="hello">Say Hello!</div>
-    <a href="#" class="map-btn">See on a Map</a>
-    <div class="rectangle">name | surname</div>
-    <div class="log">
-        <img src="assets/image-37-bg-hAn.png" alt="Зображення">
+    <div class="driver-container">
+        <h1 style="color: #fff;">Say Hello!</h1>
+        <div><img class="driver-photo" src="assets/white_person.png"></div>
+        <div class="name-of-driver">Driver Name</div>
     </div>
-    <div class="driv">
-        <img src="assets/vecteezyuser-icon-on-transparent-background19879186-1-b9p.png" alt="Зображення">
-    </div>
+
     <div>
-        <img class="profile" onclick="window.location.href='V_profile.html'" src="assets/image-41.png">
+        <img class="profile" onclick="window.location.href='V_profile.html'" src="assets/transperent_person.png">
     </div>
 </body>
 

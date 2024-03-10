@@ -30,3 +30,16 @@
     width: 100px;
     height: auto;
 }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('../assets/desert.jpg');
+    background-size: cover;
+    background-position: center;
+}
