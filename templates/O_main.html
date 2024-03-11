@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/general.css">
+    <style>
+        .order-container {
+            width: 800px;
+            height: 400px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 15%;
+        }
+
+        p {
+            color: #666;
+        }
+
+        a {
+            color: #569DAA;
+            text-decoration: none;
+        }
+
+        .profile {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 100px;
+            height: auto;
+        }
+
+        .buttons {
+            width: 100%;
+            display: flex;
+            margin-top: 15%;
+        }
+
+        .button {
+            margin: 1%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logo">
+        <img src="../assets/logo.png">
+    </div>
+    <div class="order-container">
+        <h1>Info about route</h1>
+        <div class="buttons">
+            <button onclick="window.location.href='M_over.html'" class="button">Finish order</button>
+            <button onclick="window.location.href='M_rejected.html'" class="button">Reject</button>
+            <button onclick="window.location.href='map.html'" class="button">See on a map</button>
+        </div>
+    </div>
+    <div>
+        <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
+    </div>
+</body>
+
+</html>
