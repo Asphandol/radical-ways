@@ -17,11 +17,11 @@ class LogicSystem:
         self.get_database.delete_one(data)
         return "Account has been successfully deleted"
 
-    def change_info(self):
+    def change_info(self, person, change_data):
         """
         changes info about person
         """
-        pass
+        self.get_database.update_one(person, change_data)
 
     @property
     def get_database(self):
