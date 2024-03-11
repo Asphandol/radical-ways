@@ -14,8 +14,7 @@ class LogicSystem:
         """
         delets person from app
         """
-        self.get_database.delete_one(data)
-        return "Account has been successfully deleted"
+        pass
 
     def change_info(self):
         """
