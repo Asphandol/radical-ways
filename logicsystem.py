@@ -29,6 +29,12 @@ class LogicSystem:
         db = client["Radical_ways"]
         return db["accounts"]
 
+    @property
+    def trips_database(self):
+        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        db = client["Radical_ways"]
+        return db["trips"]
+
     def log_in(self, data: dict):
         """
         logging in a person
