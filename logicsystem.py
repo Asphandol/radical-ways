@@ -93,6 +93,34 @@ def logg_in():
 
     return render_template('O_log-in.html')
 
+@app.route('/delete_acccount')
+def delete():
+    '''
+    deletes an account
+    '''
+    return render_template('V_delete_account.html')
+
+@app.route('/main')
+def main():
+    '''
+    main page
+    '''
+    return render_template('O_main.html')
+
+@app.route('/change_info')
+def change():
+    '''
+    changes info
+    '''
+    return render_template('V_change_info.html')
+
+@app.route('/get_help')
+def get_help():
+    '''
+    gets help
+    '''
+    return render_template('V_get_help.html')
+
 @app.route('/sign_in', methods = ['POST', 'GET'])
 def create_account():
     """
