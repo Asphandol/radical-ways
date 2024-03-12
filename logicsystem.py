@@ -114,20 +114,20 @@ def create_account():
         licensee = request.form['license']
 
         if not val.validate_name(name):
-            flash('You failed name(fisrt sym- upper, only letters)')
-            return render_template('O_sign-in.html')
+            flash('You failed name(fisrt symb- upper)')
+            return render_template('O_sign-up.html')
 
         if not val.validate_surname(surname):
-            flash('You failed surname(fisrt sym- upper, only letters)')
-            return render_template('O_sign-in.html')
+            flash('You failed surname(fisrt sym- upper)')
+            return render_template('O_sign-up.html')
 
         if not val.validate_email(email):
             flash('You failed email(example: a@u.com)')
-            return render_template('O_sign-in.html')
+            return render_template('O_sign-up.html')
 
         if not val.validate_password(password):
             flash('You failed password(starts with numb or letter)')
-            return render_template('O_sign-in.html')
+            return render_template('O_sign-up.html')
 
         dct = {'name': name, 'surnme': surname, 'email':email,
             'password': password}

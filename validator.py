@@ -46,6 +46,6 @@ class Validator:
         """
         validates password
         """
-        if re.search('^[0-9]',password):
+        if re.search('^[0-9a-z]',password):
             return True
         return False
