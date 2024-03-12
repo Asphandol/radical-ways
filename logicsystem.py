@@ -21,7 +21,7 @@ class LogicSystem:
         """
         changes info about person
         """
-        self.get_database.update_one(person, change_data)
+        self.get_database.update_one(person, {"$set": change_data})
 
     @property
     def get_database(self):
