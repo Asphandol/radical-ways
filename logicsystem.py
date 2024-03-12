@@ -88,9 +88,9 @@ def logg_in():
         email = request.form['email']
         password = request.form['password']
 
-        if logic_sys.log_in({'mail': email, 'password': password}):
-            flash('There are no such data')
-            return render_template('O_log-in.html')
+        # if logic_sys.log_in({'mail': email, 'password': password}):
+        #     flash('There are no such data')
+        #     return render_template('O_log-in.html')
 
         return redirect(url_for('choose_way'))
 
@@ -122,7 +122,7 @@ def create_account():
             return render_template('O_sign-up.html')
 
         if not val.validate_email(email):
-            flash('You failed email(example: a@u.com)')
+            flash('You failed email(example: aaa@uuu.com)')
             return render_template('O_sign-up.html')
 
         if not val.validate_password(password):
@@ -141,12 +141,25 @@ def create_account():
 
     return render_template('O_sign-up.html')
 
-@app.route('/choose_way')
+@app.route('/choose_way', methods = ['POST', 'GET'])
 def choose_way():
     """
     delets person from app
     """
-    return render_template('M_user.html')
+
+    city_list = []
+
+    if request.method == 'POST':
+        startt = request.form['start']
+        end = request.form['end']
+        waypoint = request.form['waypoint'] if 'waypoint' in request.form else []
+
+        mapa = Map(startt, end, waypoint)
+        city_list = mapa.take_map_data()
+
+        return render_template('M_user.html', city_list = city_list)
+
+    return render_template('M_user.html',city_list = [])
 
 @app.route('/delete')
 def delete_person(data: dict):
@@ -243,28 +256,24 @@ class Map:
     paving the way
     """
 
-    def __init__(self, start: str, other_places: list) -> None:
-        self.start = start
-        self.other_places = other_places
+    def __init__(self, startt: str, end: str, other_places: list) -> None:
+        self.startt = startt
+        self.other_places = other_places if other_places else []
+        self.end = end
 
-    @app.route('/')
     def take_map_data(self):
         """
         creates the best way beetween multiple places
         """
-        if request.method == 'POST':
+        lst_places = [self.startt, self.end] + self.other_places
 
-            start = request.form['start']
-            finish = request.form['finish']
-            addintional_points = request.form['addintional_points'].split(',')
-            lst_places = [start, finish] + addintional_points
+        # dct_dist = self.make_dist(lst_places)
+        # way = self.greedy_shortest_path(self.startt, self.end, dct_dist, lst_places)
+        # directions_result = gmaps.directions(way[0], \
+        # way[-1], waypoints = way[1:-1], mode = "driving")
 
-            dct_dist = self.make_dist(lst_places)
-            way = self.greedy_shortest_path(start, finish, dct_dist, lst_places)
-            directions_result = gmaps.directions(way[0], \
-            way[-1], waypoints = way[1:-1], mode = "driving")
-
-            return render_template('user_page.html', api_key=API_KEY, directions=directions_result)
+        # return way
+        return lst_places
 
     def make_dist(self, lst_places: list):
         """

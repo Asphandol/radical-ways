@@ -66,17 +66,50 @@
         <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
     <div class="order-container">
-        <input class="input-field" type="text" id="start" placeholder="Початок"><br><br>
-        <input class="input-field" type="text" id="end" placeholder="Кінець"><br><br>
-        <input class="input-field" type="text" id="waypoint" placeholder="Проміжні точки"><br><br>
-        <div class="output-field" id="formattedWaypoints">&nbsp;</div>
+        <form action='/choose_way' method='post'>
+            <input class="input-field" type="text" name = 'start' id="start" placeholder="Початок"><br><br>
+            <input class="input-field" type="text" name = 'end' id="end" placeholder="Кінець"><br><br>
+            <input class="input-field" type="text" id="waypoint" placeholder="Проміжні точки"><br><br>
+            <div class="output-field" name = 'waypoint' id="formattedWaypoints">&nbsp;</div>
+            <button method = 'submit' class="button">View on a map</button>
+        </form>
     </div>
     <div>
         <img class="profile" onclick="window.location.href='V_profile.html'"
             src="{{ url_for('static', filename='assets/tranperent_person.png') }}">
     </div>
 
-    <div id="map" style="height: 400px; width: 100%;"></div>
+    <script>
+        var waypoints = [];
+    
+        function addWaypoint() {
+            var waypointInput = document.getElementById("waypoint");
+            var waypointValue = waypointInput.value.trim();
+            if (waypointValue !== "") {
+                waypoints.push(waypointValue);
+                updateFormattedWaypoints();
+                waypointInput.value = "";
+            }
+        }
+    
+        function updateFormattedWaypoints() {
+            var formattedWaypointsDiv = document.getElementById("formattedWaypoints");
+            var start = document.getElementById("start").value.trim();
+            var end = document.getElementById("end").value.trim();
+            var allWaypoints = [start].concat(waypoints, [end]);
+            formattedWaypointsDiv.textContent = allWaypoints.join(", ");
+        }
+    
+        document.getElementById("waypoint").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                addWaypoint();
+            }
+        });
+    </script>
+
+    {% if city_list %}
+        <div id="map" style="height: 400px; width: 100%;"></div>
+    {% endif %}
 
     <script>
         function initMap() {
@@ -106,35 +139,7 @@
         }
     </script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
 
 </body>
-<script>
-    var waypoints = [];
-
-    function addWaypoint() {
-        var waypointInput = document.getElementById("waypoint");
-        var waypointValue = waypointInput.value.trim();
-        if (waypointValue !== "") {
-            waypoints.push(waypointValue);
-            updateFormattedWaypoints();
-            waypointInput.value = "";
-        }
-    }
-
-    function updateFormattedWaypoints() {
-        var formattedWaypointsDiv = document.getElementById("formattedWaypoints");
-        var start = document.getElementById("start").value.trim();
-        var end = document.getElementById("end").value.trim();
-        var allWaypoints = [start].concat(waypoints, [end]);
-        formattedWaypointsDiv.textContent = allWaypoints.join(", ");
-    }
-
-    document.getElementById("waypoint").addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            addWaypoint();
-        }
-    });
-</script>
-
 </html>
