@@ -12,7 +12,7 @@ app = Flask(__name__)
 API_KEY = "AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA"
 gmaps = googlemaps.Client(key=API_KEY)
 
-app.config['SECRET_KEY'] = 'dghskdhfsljhglyufluckjg'
+app.secret_key = 'mega_secret_key'
 
 class LogicSystem:
     """
@@ -89,11 +89,14 @@ def logg_in():
         password = request.form['password']
 
         if logic_sys.log_in({'mail': email, 'password': password}):
-            flash('wrong data')
+            flash('There are no such data')
+            return render_template('O_log-in.html')
+
+        return redirect(url_for('choose_way'))
 
     return render_template('O_log-in.html')
 
-@app.route('/sign_in', methods = ['POST', 'GET'])
+@app.route('/sign_up', methods = ['POST', 'GET'])
 def create_account():
     """
     creates an account
@@ -110,9 +113,21 @@ def create_account():
         car = request.form['car']
         licensee = request.form['license']
 
-        if not (val.validate_name(name) and val.validate_surname(surname) and\
-        val.validate_email(email) and val.validate_password(password)):
-            flash('You failed registration requirement')
+        if not val.validate_name(name):
+            flash('You failed name(fisrt sym- upper, only letters)')
+            return render_template('O_sign-in.html')
+
+        if not val.validate_surname(surname):
+            flash('You failed surname(fisrt sym- upper, only letters)')
+            return render_template('O_sign-in.html')
+
+        if not val.validate_email(email):
+            flash('You failed email(example: a@u.com)')
+            return render_template('O_sign-in.html')
+
+        if not val.validate_password(password):
+            flash('You failed password(starts with numb or letter)')
+            return render_template('O_sign-in.html')
 
         dct = {'name': name, 'surnme': surname, 'email':email,
             'password': password}
@@ -124,7 +139,7 @@ def create_account():
         logic_sys.sign_up(dct)
         return redirect(url_for('choose_way'))
 
-    return render_template('O_sign-in.html')
+    return render_template('O_sign-up.html')
 
 @app.route('/choose_way')
 def choose_way():

@@ -113,15 +113,18 @@
                 <span class="slider round"></span>
             </label>
             <a>Are you a Driver?</a>
-            <form action='/sign-up' method='post'>
-                <input type="text" class="input-field" placeholder="First name" id='name' , value=''>
-                <input type="text" class="input-field" placeholder="Last name" id='surname' , value=''>
+            {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+            {% endfor %}
+            <form action='/sign_up' method='post'>
+                <input type="text" class="input-field" placeholder="First name" name = 'name' id='name' , value=''>
+                <input type="text" class="input-field" placeholder="Last name" name = 'surname' id='surname' , value=''>
                 <!-- Додали id для легкого доступу через JavaScript -->
-                <input type="text" class="input-field" placeholder="Email" id='email' , value=''>
-                <input type="text" class="input-field" placeholder="Password" id='password' , value=''>
+                <input type="text" class="input-field" placeholder="Email" name = 'email' id='email' , value=''>
+                <input type="text" class="input-field" placeholder="Password" name = 'password' id='password' , value=''>
                 <!-- Додали id для легкого доступу через JavaScript -->
-                <input type="text" class="input-field" id="car" placeholder="Car" id='car' , value=''>
-                <input type="text" class="input-field" id="license" placeholder="Car's license" id='Car_license' ,
+                <input type="text" class="input-field" id="car" placeholder="Car" name = 'car' id='car' , value=''>
+                <input type="text" class="input-field" id="license" placeholder="Car's license" name = 'license' id='Car_license' ,
                     value=''>
                 <button class="button" type='submit'>Create an account</button>
                 <!-- onclick="window.location.href='O_main.html'" -->

@@ -42,11 +42,16 @@
     </div>
     <div class="container">
         <h2>Log in</h2>
-        <div class="input-container">
-            <input type="text" class="input-field" placeholder="email">
-            <input type="text" class="input-field" placeholder="password">
-            <button onclick="window.location.href='O_main.html'" method='POST' class="button">Log in</button>
-        </div>
+        {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+        {% endfor %}
+        <form action='/log_in' method='post'>
+            <div class="input-container">
+                <input type="text" class="input-field" placeholder="email">
+                <input type="text" class="input-field" placeholder="password">
+                <button onclick="window.location.href='O_main.html'" method='POST' class="button">Log in</button>
+            </div>
+        </form>
 </body>
 
 </html>
