@@ -58,6 +58,16 @@
             width: 100px;
             height: auto;
         }
+
+        .buttons {
+            width: 100%;
+            display: flex;
+            margin-top: 5%;
+        }
+
+        .button {
+            margin: 1%;
+        }
     </style>
 </head>
 
@@ -70,6 +80,10 @@
         <input class="input-field" type="text" id="end" placeholder="Кінець"><br><br>
         <input class="input-field" type="text" id="waypoint" placeholder="Проміжні точки"><br><br>
         <div class="output-field" id="formattedWaypoints">&nbsp;</div>
+        <div class="buttons">
+            <button onclick="window.location.href='Map.html'" class="button">See on a map</button>
+            <button onclick="window.location.href='Y_your_driver.html'" class="button">Find a driver</button>
+        </div>
     </div>
     <div>
         <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
