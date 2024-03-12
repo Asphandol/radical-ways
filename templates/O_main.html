@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/general.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
     <style>
         .order-container {
             width: 800px;
@@ -52,7 +52,7 @@
 
 <body>
     <div class="logo">
-        <img src="../assets/logo.png">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
     <div class="order-container">
         <h1>Info about route</h1>
@@ -63,7 +63,8 @@
         </div>
     </div>
     <div>
-        <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
+        <img class="profile" onclick="window.location.href='V_profile.html'"
+            src="{{ url_for('static', filename='assets/tranperent_person.png') }}">
     </div>
 </body>
 
