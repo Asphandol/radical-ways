@@ -32,20 +32,14 @@
 
         .profile-photo {
             margin: 20px auto;
-            /* Автоматичне центрування */
             display: block;
-            /* Блочний елемент */
             max-width: 200px;
-            /* Максимальна ширина фото */
             height: auto;
-            /* Автоматична висота */
             border-radius: 50%;
-            /* Круглий крій */
         }
 
         .profile-container {
             text-align: center;
-            /* Центрування контейнера */
         }
     </style>
 </head>
@@ -66,14 +60,11 @@
             <button onclick="window.location.href='V_profile.html'" class="button">Return to Profile</button>
         </div>
 
-
-
         <script>
             function acceptChanges() {
                 var newFirstName = document.getElementById("new-first-name").value;
                 var newLastName = document.getElementById("new-last-name").value;
                 document.getElementById("old-name").innerText = newFirstName + " " + newLastName;
-                // Можна також відправити дані на сервер для збереження
             }
         </script>
 </body>

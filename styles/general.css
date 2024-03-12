@@ -42,3 +42,11 @@ body {
     background-size: cover;
     background-position: center;
 }
+
+.profile {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 100px;
+    height: auto;
+}

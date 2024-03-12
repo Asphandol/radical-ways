@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create an account</title>
-    <link rel="stylesheet" href="../styles/general.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
     <style>
         .container {
             max-width: 400px;
@@ -36,7 +36,6 @@
             text-align: center;
         }
 
-        /* Стилізація перемикача */
         .switch {
             position: relative;
             display: inline-block;
@@ -90,7 +89,6 @@
             transform: translateX(13px);
         }
 
-        /* Кастомний стиль для перемикача */
         .slider.round {
             border-radius: 34px;
         }
@@ -103,7 +101,7 @@
 
 <body>
     <div class="logo">
-        <img src="../assets/logo.png">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
     <div class="container">
         <h2>Create an account</h2>
@@ -113,15 +111,19 @@
                 <span class="slider round"></span>
             </label>
             <a>Are you a Driver?</a>
-            <input type="text" class="input-field" placeholder="First name">
-            <input type="text" class="input-field" placeholder="Last name">
-            <!-- Додали id для легкого доступу через JavaScript -->
-            <input type="text" class="input-field" placeholder="Email">
-            <input type="text" class="input-field" placeholder="Password">
-            <!-- Додали id для легкого доступу через JavaScript -->
-            <input type="text" class="input-field" id="car" placeholder="Car">
-            <input type="text" class="input-field" id="license" placeholder="Car's license number">
-            <button onclick="window.location.href='O_main.html'" class="button">Create an account</button>
+            {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+            {% endfor %}
+            <form action='/sign_up' method='post'>
+                <input type="text" class="input-field" placeholder="First name" name='name' id='name' , value=''>
+                <input type="text" class="input-field" placeholder="Last name" name='surname' id='surname' , value=''>
+                <input type="text" class="input-field" placeholder="Email" name='email' id='email' , value=''>
+                <input type="text" class="input-field" placeholder="Password" name='password' id='password' , value=''>
+                <input type="text" class="input-field" id="car" placeholder="Car" name='car' id='car' , value=''>
+                <input type="text" class="input-field" id="license" placeholder="Car's license" name='license'
+                    id='Car_license' , value=''>
+                <button class="button" type='submit'>Create an account</button>
+            </form>
         </div>
     </div>
 
