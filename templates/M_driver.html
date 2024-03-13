@@ -4,38 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver page</title>
     <link rel="stylesheet" href="../styles/general.css">
     <style>
-        .order-container {
-            width: 600px;
+        .container {
+            width: 500px;
+            height: 400px;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             padding: 20px;
             box-sizing: border-box;
             text-align: center;
-            align-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .input-field {
-            margin-bottom: 10px;
-            width: 49%;
-            padding: 5px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .output-field {
-            background-color: #fff;
-            width: auto;
-            padding: 5px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+            display: flex;
         }
 
         h1 {
@@ -43,7 +23,11 @@
         }
 
         p {
-            color: #666;
+            color: #000;
+            text-align: left;
+            margin-left: 10%;
+            margin-right: 10%;
+            font-size: 22px;
         }
 
         a {
@@ -51,12 +35,36 @@
             text-decoration: none;
         }
 
-        .profile {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: auto;
+        .button {
+            width: 200px;
+            height: 60px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 10%;
+        }
+
+        .title-and-orders {
+            display: flex;
+            flex-direction: column;
+            justify-content: top;
+        }
+
+        .order {
+            margin-bottom: 1%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .order:hover {
+            background-color: #f0f0f0;
         }
     </style>
 </head>
@@ -65,15 +73,48 @@
     <div class="logo">
         <img src="../assets/logo.png">
     </div>
-    <div class="order-container">
-        <input class="input-field" type="text" id="start" placeholder="Початок"><br><br>
-        <input class="input-field" type="text" id="end" placeholder="Кінець"><br><br>
-        <input class="input-field" type="text" id="waypoint" placeholder="Проміжні точки"><br><br>
-        <div class="output-field" id="formattedWaypoints">&nbsp;</div>
+    <div class="container">
+        <div class="title-and-orders">
+            <h2>Current orders:</h2>
+            <div class="order" onclick="selectOrder(this)">
+                <p>Sample order1</p>
+            </div>
+            <div class="order" onclick="selectOrder(this)">
+                <p>Sample order2</p>
+            </div>
+            <div class="order" onclick="selectOrder(this)">
+                <p>Sample order3</p>
+            </div>
+
+        </div>
+    </div>
+    <div class="buttons">
+        <button class="button" onclick="acceptOrder()">Accept</button>
+        <button class="button" onclick="window.location.href='Map.html'">See on a map</button>
     </div>
     <div>
         <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
     </div>
+    <script>
+        let selectedOrder = null;
+
+        function selectOrder(order) {
+            if (selectedOrder) {
+                selectedOrder.style.backgroundColor = '';
+            }
+            selectedOrder = order;
+            order.style.backgroundColor = '#f0f0f0';
+        }
+
+        function acceptOrder() {
+            if (!selectedOrder) {
+                alert('Please select an order to accept.');
+                return;
+            }
+            const orderText = selectedOrder.querySelector('p').textContent;
+            alert(`Order "${orderText}" has been accepted.`);
+        }
+    </script>
 </body>
 
 </html>
