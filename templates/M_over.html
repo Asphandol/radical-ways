@@ -2,67 +2,37 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Rejection</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-image: url('taxi-cab-nyc.jpg.webp');
-      background-size: cover;
-      background-position: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End of trip</title>
+    <link rel="stylesheet" href="../styles/general.css">
+    <style>
+        .container {
+            width: 500px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
 
-    .container {
-      text-align: center;
-    }
-
-    .logo {
-      position: fixed;
-      top: 90%;
-      left: 94%;
-      width: 100px;
-      height: auto;
-    }
-
-    .text {
-      font-size: 100px;
-      font-weight: bold;
-      color: #ffffff;
-      margin-bottom: 20px;
-      top: 300px;
-    }
-
-    .button {
-      background-color: #2f5c9f;
-      color: white;
-      padding: 20px 40px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      margin-top: 1000px;
-      /* Adjust this value to lower or raise the button */
-    }
-
-    .button:hover {
-      background-color: #45a049;
-    }
-  </style>
+        h1 {
+            color: #333;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
-    <img src="image copy.png" alt="Logo" class="logo"> <!-- Logo added here -->
-    <div class="text">Your ride is over</div>
-    <a href="home.html" class="button">Back to Home Page</a>
-  </div>
+    <div class="logo">
+        <img src="../assets/logo.png">
+    </div>
+    <div class="container">
+        <h1>Your trip is complete</h1>
+        <button onclick="window.location.href='M_user.html'" class="button">New trip</button>
+    </div>
+    <div>
+        <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
+    </div>
 </body>
 
 </html>
