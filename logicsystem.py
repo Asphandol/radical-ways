@@ -2,7 +2,7 @@
 logic system for our customers
 """
 import pymongo
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 import googlemaps
 import requests
 from validator import Validator
@@ -32,8 +32,7 @@ class LogicSystem:
         """
         gives an account database
         """
-        client = pymongo.MongoClient("mongodb+srv://Oleg:Oleg@radicalways.\
-            gbpcvjs.mongodb.net/?retryWrites=true&w=majority&appName=Radicalways")
+        client = pymongo.MongoClient("mongodb+srv://melnykpn:Mascara_2006@radicalways.gbpcvjs.mongodb.net/?retryWrites=true&w=majority&appName=Radicalways")
         db = client["Radical_ways"]
         return db["accounts"]
 
@@ -51,14 +50,7 @@ class LogicSystem:
         """
         logging in a person
         """
-        if data["mail"] in self.get_database.find_one():
-            return True
-        if data["mail"] != self.get_database.find_one()[data["password"]]:
-            return True
-        # data = {"mail": "shtohryn.pn@ucu.edu.ua", "password": "nadvirna4ever"}
-        # result = self.get_database.find_one(data)
-        # return "Welcome back, " + result['name'].capitalize()
-        return False
+        return self.get_database.find_one(data)
 
     def sign_up(self, data: dict):
         """
@@ -66,7 +58,6 @@ class LogicSystem:
         """
         # data = {"mail": "melnyk.pn@ucu.edu.ua", "password": "watch__us", "is_driver": False}
         self.get_database.insert_one(data)
-        return data["name"] + ", Thank you for joining us"
 
 logic_sys = LogicSystem()
 
@@ -86,10 +77,16 @@ def logg_in():
         email = request.form['email']
         password = request.form['password']
 
-        # if logic_sys.log_in({'mail': email, 'password': password}):
-        #     flash('There are no such data')
-        #     return render_template('O_log-in.html')
+        if not (email and password):
+            flash('No input data')
+            return render_template('O_log-in.html')
 
+        if not bool(logic_sys.log_in({'email': email, 'password': password})):
+            flash('There are no such data')
+            return render_template('O_log-in.html')
+
+        if 'car' in logic_sys.log_in({'email': email, 'password': password}):
+            return redirect(url_for('orders'))
         return redirect(url_for('choose_way'))
 
     return render_template('O_log-in.html')
@@ -128,17 +125,18 @@ def create_account():
             return render_template('O_sign-up.html')
 
         dct = {'name': name, 'surnme': surname, 'email':email,
-            'password': password, 'drever': False}
+            'password': password}
 
         if car and licensee:
             dct['car'] = car
             dct['license'] = licensee
-            dct['driver'] = True
 
         logic_sys.sign_up(dct)
-        if dct['driver']:
-            redirect(url_for('orders'))
-        return redirect(url_for('choose_way'))
+        try:
+            if dct['car']:
+                redirect(url_for('orders'))
+        except:
+            return redirect(url_for('choose_way'))
 
     return render_template('O_sign-up.html')
 
@@ -175,8 +173,9 @@ def delete():
     deletes an account
     '''
     if request.method == 'POST':
-        info = request.form['info']
-        logic_sys.get_database.delete_one(info)
+        email = request.form['email']
+        password = request.form['password']
+        logic_sys.get_database.delete_one({'email': email, 'password': password})
         return redirect(url_for('start'))
 
     return render_template('V_delete_account.html')
@@ -211,13 +210,24 @@ def change_info(person, change_data):
     """
     logic_sys.get_database.update_one(person, {"$set": change_data})
 
-@app.route('/driver_page')
+@app.route('/driver_page', methods=['POST', 'GET'])
 def orders():
     """
     shows all orders for drivers
     """
-    lst_trips = logic_sys.trips_database[0:2]
+    # lst_trips = logic_sys.trips_database[0:2]
+    # return render_template('M_driver.html')
+    if request.method == 'POST':
+        data = request.get_json()
+        order_text = data['orderText']
+
+        print(data)
+
+        # return jsonify({'message': f'Order "{order_text}" has been accepted.'})
+        return redirect(url_for(''))
+
     return render_template('M_driver.html')
+
 
 class Person:
     """

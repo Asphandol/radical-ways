@@ -76,6 +76,11 @@
     <div class="container">
         <div class="title-and-orders">
             <h2>Current orders:</h2>
+            <!-- {% for m in ways_list %}
+            <div class="order" onclick="selectOrder(this)">
+                <p>{{ m }}</p>
+            </div>
+            {% endfor %} -->
             <div class="order" onclick="selectOrder(this)">
                 <p>Sample order1</p>
             </div>
@@ -89,31 +94,34 @@
         </div>
     </div>
     <div class="buttons">
-        <button class="button" onclick="acceptOrder()">Accept</button>
+        <!-- <button class="button" onclick="acceptOrder()">Accept</button> -->
+        <button class="button" id="acceptButton">Accept</button>
         <button class="button" onclick="window.location.href='Map.html'">See on a map</button>
     </div>
     <div>
         <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
     </div>
     <script>
-        let selectedOrder = null;
-
-        function selectOrder(order) {
-            if (selectedOrder) {
-                selectedOrder.style.backgroundColor = '';
-            }
-            selectedOrder = order;
-            order.style.backgroundColor = '#f0f0f0';
-        }
-
-        function acceptOrder() {
+        document.getElementById('acceptButton').addEventListener('click', function() {
             if (!selectedOrder) {
                 alert('Please select an order to accept.');
                 return;
             }
             const orderText = selectedOrder.querySelector('p').textContent;
-            alert(`Order "${orderText}" has been accepted.`);
-        }
+            
+            // Виконуємо AJAX-запит до сервера Flask
+            fetch('/accept_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({orderText: orderText})
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            });
+        });
     </script>
 </body>
 
