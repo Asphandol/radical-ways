@@ -14,6 +14,14 @@ gmaps = googlemaps.Client(key=API_KEY)
 
 app.secret_key = 'mega_secret_key'
 
+NAME = None
+SURNAME = None
+EMAIL = None
+PASSWORD = None
+CAR = None
+LICENSEE = None
+
+
 class LogicSystem:
     """
     a logic system class
@@ -24,7 +32,8 @@ class LogicSystem:
         """
         gives an account database
         """
-        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        client = pymongo.MongoClient("mongodb+srv://Oleg:Oleg@radicalways.\
+            gbpcvjs.mongodb.net/?retryWrites=true&w=majority&appName=Radicalways")
         db = client["Radical_ways"]
         return db["accounts"]
 
@@ -33,7 +42,8 @@ class LogicSystem:
         """
         gives an trips database
         """
-        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        client = pymongo.MongoClient("mongodb+srv://Oleg:Oleg@radicalways.gbpcvjs.\
+            mongodb.net/?retryWrites=true&w=majority&appName=Radicalways")
         db = client["Radical_ways"]
         return db["trips"]
 
@@ -57,18 +67,6 @@ class LogicSystem:
         # data = {"mail": "melnyk.pn@ucu.edu.ua", "password": "watch__us", "is_driver": False}
         self.get_database.insert_one(data)
         return data["name"] + ", Thank you for joining us"
-
-    def make_order(self):
-        """
-        makes an order 
-        """
-        pass
-
-    def show_map(self):
-        """
-        shows a map
-        """
-        pass
 
 logic_sys = LogicSystem()
 
@@ -130,13 +128,16 @@ def create_account():
             return render_template('O_sign-up.html')
 
         dct = {'name': name, 'surnme': surname, 'email':email,
-            'password': password}
+            'password': password, 'drever': False}
 
         if car and licensee:
             dct['car'] = car
             dct['license'] = licensee
+            dct['driver'] = True
 
         logic_sys.sign_up(dct)
+        if dct['driver']:
+            redirect(url_for('orders'))
         return redirect(url_for('choose_way'))
 
     return render_template('O_sign-up.html')
@@ -161,13 +162,47 @@ def choose_way():
 
     return render_template('M_user.html',city_list = [])
 
-@app.route('/delete')
-def delete_person(data: dict):
+@app.route('/profile')
+def profile():
     """
-    delets person from app
+    profile for our user
     """
-    logic_sys.get_database.delete_one(data)
-    return render_template('regestartion.html')
+    return render_template('V_profile.html')
+
+@app.route('/delete_acccount', methods = ['POST', 'GET'])
+def delete():
+    '''
+    deletes an account
+    '''
+    if request.method == 'POST':
+        info = request.form['info']
+        logic_sys.get_database.delete_one(info)
+        return redirect(url_for('start'))
+
+    return render_template('V_delete_account.html')
+
+@app.route('/main')
+def main():
+    '''
+    main page
+    '''
+    return render_template('O_main.html')
+
+@app.route('/change_info')
+def change():
+    '''
+    changes info
+    '''
+    return render_template('V_change_info.html')
+
+@app.route('/get_help')
+def get_help():
+    '''
+    gets help
+    '''
+    if request.method == 'POST':
+        return redirect(url_for('profile'))
+    return render_template('V_get_help.html')
 
 @app.route('/change_info')
 def change_info(person, change_data):
@@ -181,7 +216,8 @@ def orders():
     """
     shows all orders for drivers
     """
-    pass
+    lst_trips = logic_sys.trips_database[0:2]
+    return render_template('M_driver.html')
 
 class Person:
     """
