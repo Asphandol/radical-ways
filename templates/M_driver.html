@@ -74,55 +74,57 @@
         <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
     <div class="container">
-        <div class="title-and-orders">
+        <div id="orders" class="title-and-orders">
             <h2>Current orders:</h2>
-            <!-- {% for m in ways_list %}
-            <div class="order" onclick="selectOrder(this)">
-                <p>{{ m }}</p>
+            {% for m in order_list %}
+            <div class="order" data-id="{{ m['id'] }}" onclick="selectOrder(this)">
+                <p>{{ [m['last_point'], m['starting_point']] + m['additional']  if m['additional'] else [m['last_point'], m['starting_point']]}}</p>
             </div>
-            {% endfor %} -->
-            <div class="order" onclick="selectOrder(this)">
-                <p>Sample order1</p>
-            </div>
-            <div class="order" onclick="selectOrder(this)">
-                <p>Sample order2</p>
-            </div>
-            <div class="order" onclick="selectOrder(this)">
-                <p>Sample order3</p>
-            </div>
-
+            {% endfor %}
         </div>
     </div>
     <div class="buttons">
         <!-- <button class="button" onclick="acceptOrder()">Accept</button> -->
-        <button class="button" id="acceptButton">Accept</button>
+        <!-- <button id="sendButton" onclick="sendSelectedOrder()">Відправити вибране</button> -->
+        <button id="sendButton">Відправити вибране</button>
+        <!-- <button class="button" id="acceptButton">Accept</button> -->
         <button class="button" onclick="window.location.href='Map.html'">See on a map</button>
     </div>
     <div>
-        <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
+        <img class="profile" onclick="window.location.href='/profile'" src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
+
     <script>
-        document.getElementById('acceptButton').addEventListener('click', function() {
-            if (!selectedOrder) {
-                alert('Please select an order to accept.');
-                return;
+        document.getElementById('sendButton').addEventListener('click', function() {
+            const selectedOrder = document.querySelector('.order.selected');
+            if (selectedOrder) {
+                const orderId = selectedOrder.getAttribute('data-id');
+                fetch('/driver_page', {
+                    method: 'POST',
+                    body: JSON.stringify({ orderId: orderId }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    console.log('Запит успішно відправлено');
+                }).catch(error => {
+                    console.error('Помилка під час відправлення запиту:', error);
+                });
+            } else {
+                console.log('Спочатку виберіть замовлення');
             }
-            const orderText = selectedOrder.querySelector('p').textContent;
-            
-            // Виконуємо AJAX-запит до сервера Flask
-            fetch('/accept_order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({orderText: orderText})
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
+        });
+
+        document.querySelectorAll('.order').forEach(order => {
+            order.addEventListener('click', function() {
+                document.querySelectorAll('.order').forEach(order => {
+                    order.classList.remove('selected');
+                });
+                this.classList.add('selected');
             });
         });
     </script>
+
 </body>
 
 </html>

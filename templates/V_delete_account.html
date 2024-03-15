@@ -42,9 +42,14 @@
     </div>
     <div class="delete-account-container">
         <h2>Delete Account</h2>
+        {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+        {% endfor %}
         <div class="profile-container">
-            <input type="text" class="input-field" placeholder="Accept your password">
-            <button onclick="window.location.href='/'" class="button">Delete</button>
+            <form action='/delete_acccount'  method="post">
+                <input type="text" class="input-field" id = password name = password placeholder="Accept your password">
+                <button method = 'submit' class="button">Delete</button>
+            </form>
             <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
         </div>
 </body>

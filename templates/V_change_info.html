@@ -64,17 +64,14 @@
             <img src="{{ url_for('static', filename='assets/stepan.jpg')}}" alt="Old Profile Photo"
                 class="profile-photo">
             <button class="button">Change Photo</button>
-            <button onclick="window.location.href='V_profile.html'" class="button">Return to Profile</button>
+            <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
         </div>
-
-
 
         <script>
             function acceptChanges() {
                 var newFirstName = document.getElementById("new-first-name").value;
                 var newLastName = document.getElementById("new-last-name").value;
                 document.getElementById("old-name").innerText = newFirstName + " " + newLastName;
-                // Можна також відправити дані на сервер для збереження
             }
         </script>
 </body>
