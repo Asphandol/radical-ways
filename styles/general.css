@@ -50,3 +50,11 @@ body {
     width: 100px;
     height: auto;
 }
+
+.flash {
+    background-color: #dc858c;
+    color: #721c24;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
