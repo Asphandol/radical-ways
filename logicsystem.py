@@ -311,6 +311,8 @@ class Map:
         """
         makes a shortest path
         """
+        if len(all_points) ==2:
+            return [start, end]
         unvisited = set(all_points)
         path = [start]
         current = start
