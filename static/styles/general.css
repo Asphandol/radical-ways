@@ -20,7 +20,6 @@
 
 .logo {
     position: fixed;
-    left: 100px;
     top: 10px;
     left: 10px;
     border-radius: 50%;
@@ -42,4 +41,20 @@ body {
     background-image: url('../assets/desert.jpg');
     background-size: cover;
     background-position: center;
+}
+
+.profile {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 100px;
+    height: auto;
+}
+
+.flash {
+    background-color: #dc858c;
+    color: #721c24;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }

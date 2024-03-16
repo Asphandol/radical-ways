@@ -161,7 +161,7 @@ def choose_way():
         action = request.form['action']
         startt = request.form['start']
         end = request.form['end']
-        waypoint = request.form['waypoints'].split(', ') if 'waypoint' in request.form else []
+        waypoint = request.form['allWaypoints'].split(', ') if 'waypoint' in request.form else []
 
         mapa = Map(startt, end, waypoint)
         city_list = mapa.take_map_data()
@@ -172,6 +172,7 @@ def choose_way():
 
         if action == 'button2':
             logic_sys.add_order(dct_info)
+            session['order'] = dct_info
             return redirect(url_for('waiting_driver'))
 
     return render_template('M_user.html',city_list = [])
@@ -181,17 +182,37 @@ def waiting_driver():
     """
     renders template with until driver do notaccept your request
     """
+
+    action = request.form['action']
+
     if request.method == 'POST':
-        return redirect(url_for('your_driver'))
 
-    return render_template('waiting.html')
+        if action == 'button1':
+            logic_sys.trips_database.delete_one(session['order'])
+            return redirect(url_for('choose_way'))
 
-@app.route('/your_driver')
+        if action == 'button2':
+            if logic_sys.trips_database.find_one(session['order'])['in_proccess'] is True:
+                return redirect(url_for('your_driver'))
+
+            flash('No driver took your order')
+            return render_template('V_searching.html')
+
+    return render_template('V_searching.html')
+
+@app.route('/your_driver', methods = ['POST', 'GET'])
 def your_driver():
     """
     renders your driver page
     """
-    return render_template('Y_your_driver.html')
+    lst_ways = []
+    if request.form == 'POST':
+        info = session['order']
+        mapa = Map(info['start'], info['end'], info['allWaypoints'])
+        lst_ways = mapa.take_map_data()
+        return render_template('Y_your_driver.html', lst_ways = lst_ways)
+
+    return render_template('Y_your_driver.html', lst_ways = lst_ways)
 
 @app.route('/profile')
 def profile():
@@ -294,63 +315,12 @@ def in_way_proccess():
 
     return render_template('O_main.html', lst_ways = lst_ways)
 
-class Person:
+@app.errorhandler(404)
+def page_not_found():
     """
-    a person class
+    page is not found erroe
     """
-    def __init__(self, name: str, surname: str, email_adress: str, password: str) -> None:
-
-        self.name = name
-        self.surname = surname
-        self.email_adress = email_adress
-        self.password = password
-        self.is_registred = True
-
-class Driver(Person):
-    """
-    driver class
-    """
-
-    def __init__(self, name: str, surname: str,
-                email_adress: str, password: str,
-                car: str, license_num: int) -> None:
-
-        super().__init__(name, surname, email_adress, password)
-
-        self.is_driver = True
-        self.car = car
-        self.license_num = license_num
-        self.is_able = True
-
-    def respond(self):
-        """
-        makes a respond on users rquest
-        """
-        pass
-
-    def finish_order(self):
-        """
-        finish users order
-        """
-        pass
-
-    def accept(self):
-        """
-        accept users request        
-        """
-        pass
-
-    def reject(self):
-        """
-        reject users request
-        """
-        pass
-
-    def end_session(self):
-        """
-        ends session with user
-        """
-        pass
+    return render_template('V_not_found.html')
 
 class Order:
     """

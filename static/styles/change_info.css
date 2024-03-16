@@ -1,4 +1,4 @@
-.container {
+.change-info-container {
     max-width: 600px;
     margin: 0 auto;
     background-color: rgba(255, 255, 255, 0.8);
@@ -21,6 +21,14 @@ h2 {
     font-size: 16px;
 }
 
-.input-container {
+.profile-photo {
+    margin: 20px auto;
+    display: block;
+    max-width: 200px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.profile-container {
     text-align: center;
 }
