@@ -71,7 +71,12 @@
         <div class="text_num">XXXXXXXX</div>
         <h2>Car type:</h2>
         <div class="text_type">XXXXXXXX</div>
-        <button onclick="window.location.href='map.html'" class="button" style="width: 50%;">See on a map</button>
+        <from action='/your_driver' method='post'>
+        <button metohd = 'submit' class="button" style="width: 50%;">See on a map</button>
+        </from>
+        {% if city_list %}
+        <div id="map" style="height: 400px; width: 100%;"></div>
+        {% endif %}
     </div>
 
     <div class="driver-container">

@@ -205,14 +205,14 @@ def your_driver():
     """
     renders your driver page
     """
-    lst_ways = []
+    city_list = []
     if request.form == 'POST':
         info = session['order']
         mapa = Map(info['start'], info['end'], info['allWaypoints'])
-        lst_ways = mapa.take_map_data()
-        return render_template('Y_your_driver.html', lst_ways = lst_ways)
+        city_list = mapa.take_map_data()
+        return render_template('Y_your_driver.html', city_list = city_list)
 
-    return render_template('Y_your_driver.html', lst_ways = lst_ways)
+    return render_template('Y_your_driver.html', city_list = city_list)
 
 @app.route('/profile')
 def profile():
