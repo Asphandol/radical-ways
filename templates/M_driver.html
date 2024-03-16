@@ -77,17 +77,16 @@
         <div id="orders" class="title-and-orders">
             <h2>Current orders:</h2>
             {% for m in order_list %}
-            <div class="order" data-id="{{ m['id'] }}" onclick="selectOrder(this)">
+            <div class="order" data-id="{{ m }}" onclick="selectOrder(this)">
                 <p>{{ [m['last_point'], m['starting_point']] + m['additional']  if m['additional'] else [m['last_point'], m['starting_point']]}}</p>
             </div>
             {% endfor %}
         </div>
     </div>
     <div class="buttons">
-        <!-- <button class="button" onclick="acceptOrder()">Accept</button> -->
-        <!-- <button id="sendButton" onclick="sendSelectedOrder()">Відправити вибране</button> -->
-        <button id="sendButton">Відправити вибране</button>
-        <!-- <button class="button" id="acceptButton">Accept</button> -->
+        <form action='/driver_page' method="post">
+            <button id="sendButton" type='submit' class="button">Відправити вибране</button>
+        </form>        
         <button class="button" onclick="window.location.href='Map.html'">See on a map</button>
     </div>
     <div>
@@ -95,36 +94,39 @@
     </div>
 
     <script>
-        document.getElementById('sendButton').addEventListener('click', function() {
-            const selectedOrder = document.querySelector('.order.selected');
-            if (selectedOrder) {
-                const orderId = selectedOrder.getAttribute('data-id');
-                fetch('/driver_page', {
-                    method: 'POST',
-                    body: JSON.stringify({ orderId: orderId }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(response => {
-                    console.log('Запит успішно відправлено');
-                }).catch(error => {
-                    console.error('Помилка під час відправлення запиту:', error);
-                });
-            } else {
-                console.log('Спочатку виберіть замовлення');
-            }
-        });
+        function selectOrder(element) {
+    document.querySelectorAll('.order').forEach(order => {
+        order.classList.remove('selected');
+    });
+    element.classList.add('selected');
+}
 
-        document.querySelectorAll('.order').forEach(order => {
-            order.addEventListener('click', function() {
-                document.querySelectorAll('.order').forEach(order => {
-                    order.classList.remove('selected');
-                });
-                this.classList.add('selected');
-            });
+document.getElementById('sendButton').addEventListener('click', function(event) {
+    event.preventDefault();
+
+    const selectedOrder = document.querySelector('.order.selected');
+    if (selectedOrder) {
+        const orderId = selectedOrder.getAttribute('data-id');
+        const formData = new FormData();
+        formData.append('orderId', orderId);
+
+        fetch('/driver_page', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+        .then(data => {
+            console.log('Дані успішно відправлено:', data);
+        }).catch(error => {
+            console.error('Помилка під час відправлення запиту:', error);
         });
+    } else {
+        console.log('Спочатку виберіть замовлення');
+    }
+});
+
     </script>
-
+    
+    
 </body>
 
 </html>

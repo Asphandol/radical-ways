@@ -246,21 +246,53 @@ def orders():
     """
     shows all orders for drivers
     """
-    order_list = list(logic_sys.trips_database.find({}))[:2]
+    order_list = []
 
-    print(order_list)
+    all_orders = list(logic_sys.trips_database.find({}))
+
+    for i in all_orders:
+        if len(order_list) != 3 and i['in_proccess'] is False:
+            order_list.append(i)
+        elif len(order_list) == 3:
+            break
 
     if request.method == 'POST':
-        data = request.get_json()
-        order_id = data.get('orderId')
-
-        print(order_id)
-
-        # return jsonify({'message': f'Order "{order_text}" has been accepted.'})
-        # return redirect(url_for(''))
+        session['order_id'] = request.form.get('orderId')
+        logic_sys.trips_database.delete_one(session['order_id'])
+        session['order_id']['in_proccess'] = True
+        logic_sys.add_order(session['order_id'])
+        return redirect(url_for('in_way_proccess'))
 
     return render_template('M_driver.html', order_list = order_list)
 
+@app.route('/in_way', methods=['POST', 'GET'])
+def in_way_proccess():
+    """
+    represents driver in a way
+    """
+
+    lst_ways = []
+
+    if request.method == 'POST':
+
+        action = request.form['action']
+
+        if action == 'button1':
+            logic_sys.trips_database.delete_one(session['order_id'])
+            return redirect(url_for('orders'))
+
+        if action == 'button2':
+            logic_sys.trips_database.delete_one(session['order_id'])
+            session['order_id']['in_proccess'] = False
+            logic_sys.add_order(session['order_id'])
+            return redirect(url_for('orders'))
+
+        if action == 'button3':
+            lst_ways = [session['order_id']['start'], session['order_id']['end']]\
+             + session['order_id']['waypoints']
+            return render_template('O_main.html', lst_ways = lst_ways)
+
+    return render_template('O_main.html', lst_ways = lst_ways)
 
 class Person:
     """

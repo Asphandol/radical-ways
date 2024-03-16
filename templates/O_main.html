@@ -57,9 +57,11 @@
     <div class="order-container">
         <h1>Info about route</h1>
         <div class="buttons">
-            <button onclick="window.location.href='M_over.html'" class="button">Finish order</button>
-            <button onclick="window.location.href='M_rejected.html'" class="button">Reject</button>
-            <button onclick="window.location.href='map.html'" class="button">See on a map</button>
+            <form action='/in_way' method='post'>
+                <button class="button" type='submit' value="button1">Finish order</button>
+                <button class="button" type='submit' value="button2">Reject</button>
+                <button class="button" type='submit' value="button3">See on a map</button>
+            </form>
         </div>
     </div>
     <div>

@@ -143,36 +143,6 @@
         }
     </script>
 
-<script>
-    document.getElementById('sendButton').addEventListener('click', function() {
-        const selectedOrder = document.querySelector('.order.selected');
-        if (selectedOrder) {
-            const orderId = selectedOrder.getAttribute('data-id');
-            fetch('/driver_page', {
-                method: 'POST',
-                body: JSON.stringify({ orderId: orderId }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                console.log('Запит успішно відправлено');
-            }).catch(error => {
-                console.error('Помилка під час відправлення запиту:', error);
-            });
-        } else {
-            console.log('Спочатку виберіть замовлення');
-        }
-    });
-
-    document.querySelectorAll('.order').forEach(order => {
-        order.addEventListener('click', function() {
-            document.querySelectorAll('.order').forEach(order => {
-                order.classList.remove('selected');
-            });
-            this.classList.add('selected');
-        });
-    });
-    </script>
 
     <script>
         function submitForm() {
