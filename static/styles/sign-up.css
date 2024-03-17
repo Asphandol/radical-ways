@@ -86,3 +86,9 @@ input:checked+.slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.switch-and-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -6,34 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Account</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
-    <style>
-        .delete-account-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        .input-field {
-            margin-bottom: 10px;
-            width: calc(100% - 10px);
-            padding: 5px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .profile-container {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/delete.css') }}">
 </head>
 
 <body>
@@ -43,12 +16,12 @@
     <div class="delete-account-container">
         <h2>Delete Account</h2>
         {% for msg in get_flashed_messages() %}
-            <div>{{msg}}</div>
+        <div>{{msg}}</div>
         {% endfor %}
         <div class="profile-container">
-            <form action='/delete_acccount'  method="post">
-                <input type="text" class="input-field" id = password name = password placeholder="Accept your password">
-                <button method = 'submit' class="button">Delete</button>
+            <form action='/delete_acccount' method="post">
+                <input type="text" class="input-field" id=password name=password placeholder="Accept your password">
+                <button method='submit' class="button">Delete</button>
             </form>
             <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
         </div>

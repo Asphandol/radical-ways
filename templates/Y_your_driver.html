@@ -5,62 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/your_driver.css') }}">
     <title>Hello Map</title>
-    <style>
-        .info-container {
-            width: 400px;
-            height: 500px;
-            background-color: #fff;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            box-sizing: border-box;
-            position: absolute;
-            right: 10%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .driver-container {
-            width: 300px;
-            height: 600px;
-            padding: 20px;
-            /* box-sizing: border-box; */
-            position: absolute;
-            left: 10%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-
-        .name-of-driver {
-            width: 100%;
-            margin-top: 5%;
-            font-size: 35px;
-            color: #fff;
-            border: 3px solid #fff;
-            justify-content: center;
-            align-items: center;
-        }
-
-
-        .driver-photo {
-            width: 100%;
-        }
-
-        .profile {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: auto;
-        }
-    </style>
 
     <div class="logo">
         <img src="{{ url_for('static', filename='assets/logo.png') }}">

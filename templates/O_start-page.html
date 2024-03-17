@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start page</title>
-    <link rel="stylesheet" href="../styles/general.css">
-    <link rel="stylesheet" href="../styles/start.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/styles/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/styles/start.css') }}">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
         <div class="logo-and-text">
             <div class="logo-and-name">
                 <div class="logo">
-                    <img src="../assets/logo.png">
+                    <img src="{{ url_for('static', filename='assets/logo.png') }}">
                 </div>
                 <h1>Radical Ways</h1>
             </div>
@@ -26,8 +26,8 @@
             </p>
         </div>
         <div class="buttons">
-            <a class="button" href="/sign_up">Sign up</a>
-            <a class="button" href="/log_in">Log in</a>
+            <button class="button" onclick="window.location.href='/sign_up'">Sign Up</button>
+            <button class="button" onclick="window.location.href='/log_in'">Log In</button>
         </div>
     </div>
 </body>
