@@ -73,8 +73,9 @@
             <!-- <div class="output-field" type = 'text' name = 'waypoint' id="formattedWaypoints">&nbsp;</div> -->
             <div class="output-field" id="formattedWaypoints">&nbsp;</div>
             <input type="hidden" name="waypoints" id="waypointsInput">
-            <button method = 'submit' class="button" name="action" value="button1">View on a map</button>
-            <button method = 'submit' class="button" name="action" value="button2">Find a driver</button>
+            <button onclick="submitForm()" class="button" name="action" value="button1">View on a map</button>
+            <button onclick="submitForm()" class="button" name="action" value="button2">Find a driver</button>
+
             <!-- onclick="window.location.href='/M_driver'" -->
         </form>
     </div>
@@ -87,6 +88,15 @@
         <div id="map" style="height: 400px; width: 100%;"></div>
     {% endif %}
 
+
+    <script>
+        function submitForm() {
+            let formattedWaypoints = document.getElementById('formattedWaypoints').innerText;
+            document.getElementById('waypointsInput').value = formattedWaypoints;
+    
+            document.getElementById('myForm').submit();
+        }
+    </script>
     <script>
         var waypoints = [];
     
@@ -109,7 +119,7 @@
         }
     
         document.getElementById("waypoint").addEventListener("keypress", function (event) {
-            if (event.key === "space") {
+            if (event.key === "=") {
                 addWaypoint();
             }
         });

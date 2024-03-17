@@ -74,8 +74,16 @@ def logg_in():
         email = request.form['email']
         password = request.form['password']
 
-        if not (email and password):
+        if not email and not password:
             flash('No input data')
+            return render_template('O_log-in.html')
+
+        if not email:
+            flash('You need to input email')
+            return render_template('O_log-in.html')
+
+        if not password:
+            flash('You need to input password')
             return render_template('O_log-in.html')
 
         if not bool(logic_sys.log_in({'email': email, 'password': password})):
@@ -161,10 +169,17 @@ def choose_way():
         action = request.form['action']
         startt = request.form['start']
         end = request.form['end']
-        waypoint = request.form['allWaypoints'].split(', ') if 'waypoint' in request.form else []
 
-        mapa = Map(startt, end, waypoint)
+        if request.form['waypoints']:
+            waypoints = request.form['waypoints'].split(', ')
+            waypoints.remove(end)
+            waypoints.remove(startt)
+        else:
+            waypoints = []
+
+        mapa = Map(startt, end, waypoints)
         city_list = mapa.take_map_data()
+
         dct_info = {'email': session['email'], 'waypoints_list': city_list, 'in_proccess': False}
 
         if action == 'button1':
@@ -316,7 +331,7 @@ def in_way_proccess():
     return render_template('O_main.html', lst_ways = lst_ways)
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(error):
     """
     page is not found erroe
     """
@@ -348,13 +363,13 @@ class Map:
         """
         lst_places = [self.startt, self.end] + self.other_places
 
-        # dct_dist = self.make_dist(lst_places)
-        # way = self.greedy_shortest_path(self.startt, self.end, dct_dist, lst_places)
+        dct_dist = self.make_dist(lst_places)
+        way = self.greedy_shortest_path(self.startt, self.end, dct_dist, lst_places)
         # directions_result = gmaps.directions(way[0], \
         # way[-1], waypoints = way[1:-1], mode = "driving")
 
-        # return way
-        return lst_places
+        return way
+        # return lst_places
 
     def make_dist(self, lst_places: list):
         """
@@ -384,14 +399,14 @@ class Map:
         return distances
 
     @staticmethod
-    def greedy_shortest_path(graph, start, end, all_points):
+    def greedy_shortest_path(graph, startt, end, all_points):
         """
         makes a shortest path
         """
         unvisited = set(all_points)
-        path = [start]
-        current = start
-        unvisited.remove(start)
+        path = [startt]
+        current = startt
+        unvisited.remove(startt)
 
         while unvisited:
             next_node = None

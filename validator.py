@@ -1,51 +1,79 @@
 """
-Regex func
+validates users data
 """
-
-import re
 
 class Validator:
     """
-    validor of regexes
+    validator class
     """
     def validate_name(self, name_surname: str):
         """
-        validate name and surname
+        Validates name and surname.
         """
-        if re.search(r'^[A-Z][a-z]{2,30}$' ,name_surname):
-            return True
-        return False
+        if len(name_surname.split())!=1:
+            return False
+
+        name = name_surname.split()[0]
+
+        for i in name:
+            if i.isdigit():
+                return False
+
+        if len(name) > 31:
+            return False
+        return True
 
     def validate_surname(self, name_surname: str):
         """
-        validate name and surname
+        Validates surname.
         """
-        if re.search(r'^[A-Z][a-z]{2,30}$' ,name_surname):
-            return True
-        return False
+        if len(name_surname.split())!=2:
+            return False
+
+        surname = name_surname.split()[1]
+
+        for i in surname:
+            if i.isdigit():
+                return False
+
+        if len(surname) > 31:
+            return False
+        return True
 
     def validate_phone(self, phone: str):
         """
-        validates phone
+        Validates phone.
         """
-        if re.search\
-(r'\+[0-9]{1,2}[0-9]{10}$|^\+[0-9]{1,2} [(]0[0-9]{2}[)] [0-9]{3}-[0-9]{2}-[0-9]{2}$', phone):
-            return True
-        return False
+        for el in phone:
+            if not el.isdigit() or el not in ('+', '-', ' '):
+                return False
+        return True
 
     def validate_email(self, email: str):
         """
-        validates email
+        Validates email.
         """
-        if re.search(r"^[^.][a-z!#$%&'*+-/=?^_`{|}]{1,64}@[a-z.]{1,255}\.(com|org|edu|gov|net|ua)$",
-         email):
-            return True
-        return False
+        if '@' not in email or '.' not in email:
+            return False
+
+        if len(email.split('@'))!=2:
+            return False
+
+        if len(email.split('@')[1].split('.'))!=2:
+            return False
+
+        return True
+
+
 
     def validate_password(self, password: str):
         """
-        validates password
+        Validates password.
         """
-        if re.search('^[0-9a-z]',password):
-            return True
+        if len(password)<8:
+            return False
+        if not any(el.isupper() for el in password):
+            return False
+        if not any(el.isdigit() for el in password):
+            return False
         return False

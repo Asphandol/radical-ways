@@ -43,7 +43,7 @@
     <div class="container">
         <h2>Log in</h2>
         {% for msg in get_flashed_messages() %}
-            <div>{{msg}}</div>
+            <div>{{ msg }}</div>
         {% endfor %}
         <form action='/log_in' method='post'>
             <div class="input-container">
