@@ -2,10 +2,12 @@
 logic system for our customers
 """
 import pymongo
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 import googlemaps
 import requests
+from bson import ObjectId
 from PIL import Image
+import time
 from validator import Validator
 
 app = Flask(__name__)
@@ -90,9 +92,7 @@ def logg_in():
             flash('There are no such data')
             return render_template('O_log-in.html')
 
-        # session['my_id'] = logic_sys.log_in({'email': email, 'password': password})['_id']
-        session['password'] = password
-        session['email'] = email
+        session['my_id'] = str(logic_sys.log_in({'email': email, 'password': password})['_id'])
 
         if 'car' in logic_sys.log_in({'email': email, 'password': password}):
 
@@ -147,9 +147,7 @@ def create_account():
             dct['license'] = licensee
 
         logic_sys.sign_up(dct)
-        # session['my_id'] = logic_sys.log_in({'email': email, 'password': password})['_id']
-        session['password'] = password
-        session['email'] = email
+        session['my_id'] = str(logic_sys.log_in({'email': email, 'password': password})['_id'])
 
         if 'car' in dct:
             return redirect(url_for('orders'))
@@ -180,40 +178,26 @@ def choose_way():
         mapa = Map(startt, end, waypoints)
         city_list = mapa.take_map_data()
 
-        dct_info = {'email': session['email'], 'waypoints_list': city_list, 'in_proccess': False}
-
         if action == 'button1':
             return render_template('M_user.html', city_list = city_list)
 
+        dct_info = {
+                    'user_id': ObjectId(session['my_id']),
+                    'waypoints_list': city_list,
+                    'status': 'created'
+                    }
+
         if action == 'button2':
-            logic_sys.add_order(dct_info)
-            session['order'] = dct_info
-            return redirect(url_for('waiting_driver'))
+            logic_sys.trips_database.insert_one(dct_info)
+            trip_id = logic_sys.trips_database.find_one(dct_info)
+            while True:
+                time.sleep(2)
+                try:
+                    logic_sys.trips_database.find_one(trip_id)['status']
+                except TypeError:
+                    return redirect(url_for('your_driver'))
 
     return render_template('M_user.html',city_list = [])
-
-@app.route('/driver_waiting', methods = ['POST', 'GET'])
-def waiting_driver():
-    """
-    renders template with until driver do notaccept your request
-    """
-
-    action = request.form['action']
-
-    if request.method == 'POST':
-
-        if action == 'button1':
-            logic_sys.trips_database.delete_one(session['order'])
-            return redirect(url_for('choose_way'))
-
-        if action == 'button2':
-            if logic_sys.trips_database.find_one(session['order'])['in_proccess'] is True:
-                return redirect(url_for('your_driver'))
-
-            flash('No driver took your order')
-            return render_template('V_searching.html')
-
-    return render_template('V_searching.html')
 
 @app.route('/your_driver', methods = ['POST', 'GET'])
 def your_driver():
@@ -222,9 +206,10 @@ def your_driver():
     """
     city_list = []
     if request.form == 'POST':
-        info = session['order']
-        mapa = Map(info['start'], info['end'], info['allWaypoints'])
-        city_list = mapa.take_map_data()
+        city_list = logic_sys.trips_database.find_one(
+            {'user_id': ObjectId(session['my_id'])}
+            )['waypoints_list']
+
         return render_template('Y_your_driver.html', city_list = city_list)
 
     return render_template('Y_your_driver.html', city_list = city_list)
@@ -260,7 +245,7 @@ def main():
     '''
     return render_template('O_main.html')
 
-@app.route('/get_help')
+@app.route('/get_help', methods = ['POST', 'GET'])
 def get_help():
     '''
     gets help
@@ -287,16 +272,14 @@ def orders():
     all_orders = list(logic_sys.trips_database.find({}))
 
     for i in all_orders:
-        if len(order_list) != 3 and i['in_proccess'] is False:
+        if len(order_list) != 3 and i['status'] == 'created':
             order_list.append(i)
         elif len(order_list) == 3:
             break
 
     if request.method == 'POST':
-        session['order_id'] = request.form.get('orderId')
-        logic_sys.trips_database.delete_one(session['order_id'])
-        session['order_id']['in_proccess'] = True
-        logic_sys.add_order(session['order_id'])
+        order = request.form.get('orderId')
+        logic_sys.trips_database.update_one(order, {'$pull': {'status': 'taken'}})
         return redirect(url_for('in_way_proccess'))
 
     return render_template('M_driver.html', order_list = order_list)
@@ -365,11 +348,8 @@ class Map:
 
         dct_dist = self.make_dist(lst_places)
         way = self.greedy_shortest_path(self.startt, self.end, dct_dist, lst_places)
-        # directions_result = gmaps.directions(way[0], \
-        # way[-1], waypoints = way[1:-1], mode = "driving")
 
         return way
-        # return lst_places
 
     def make_dist(self, lst_places: list):
         """
@@ -399,7 +379,7 @@ class Map:
         return distances
 
     @staticmethod
-    def greedy_shortest_path(graph, startt, end, all_points):
+    def greedy_shortest_path(startt, end, graph, all_points):
         """
         makes a shortest path
         """
