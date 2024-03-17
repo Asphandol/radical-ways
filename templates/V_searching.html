@@ -5,23 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Searching for driver...</title>
-    <link rel="stylesheet" href="../styles/general.css">
-    <link rel="stylesheet" href="../styles/searching.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/searching.css') }}">
 </head>
 
 <body>
     <div class="logo">
-        <img src="../assets/logo.png">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
     <div class="container">
         <h1>Searching for a driver</h1>
         <from action='/driver_waiting' method='post'>
-            <button method = 'submit' class="button" value = 'button1'>Cancel the trip</button>
-            <button method = 'submit' class="button" value = 'button2'>Check if the request has been accepted</button>
+            <button method='submit' class="button" value='button1'>Cancel the trip</button>
+            <button method='submit' class="button" value='button2'>Check if the request has been accepted</button>
         </from>
     </div>
     <div>
-        <img class="profile" onclick="window.location.href='V_profile.html'" src="../assets/transperent_person.png">
+        <img class="profile" onclick="window.location.href='/profile'"
+            src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
 </body>
 

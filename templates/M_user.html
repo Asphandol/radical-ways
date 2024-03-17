@@ -5,60 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
-    <style>
-        .order-container {
-            width: 600px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-            align-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .input-field {
-            margin-bottom: 10px;
-            width: 49%;
-            padding: 5px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .output-field {
-            background-color: #fff;
-            width: auto;
-            padding: 5px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        p {
-            color: #666;
-        }
-
-        a {
-            color: #569DAA;
-            text-decoration: none;
-        }
-
-        .profile {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/user.css') }}">
 </head>
 
 <body>
@@ -67,16 +14,15 @@
     </div>
     <div class="order-container">
         <form id="myForm" action='/choose_way' method='post'>
-            <input class="input-field" type="text" name = 'start' id="start" placeholder="Початок"><br><br>
-            <input class="input-field" type="text" name = 'end' id="end" placeholder="Кінець"><br><br>
+            <input class="input-field" type="text" name='start' id="start" placeholder="Початок"><br><br>
+            <input class="input-field" type="text" name='end' id="end" placeholder="Кінець"><br><br>
             <input class="input-field" type="text" id="waypoint" placeholder="Проміжні точки"><br><br>
-            <!-- <div class="output-field" type = 'text' name = 'waypoint' id="formattedWaypoints">&nbsp;</div> -->
             <div class="output-field" id="formattedWaypoints">&nbsp;</div>
             <input type="hidden" name="waypoints" id="waypointsInput">
-            <button onclick="submitForm()" class="button" name="action" value="button1">View on a map</button>
-            <button onclick="submitForm()" class="button" name="action" value="button2">Find a driver</button>
-
-            <!-- onclick="window.location.href='/M_driver'" -->
+            <div class="buttons">
+                <button onclick="submitForm()" class="button" name="action" value="button1">View on a map</button>
+                <button onclick="submitForm()" class="button" name="action" value="button2">Find a driver</button>
+            </div>
         </form>
     </div>
     <div>
@@ -85,7 +31,7 @@
     </div>
 
     {% if city_list %}
-        <div id="map" style="height: 400px; width: 100%;"></div>
+    <div id="map" style="height: 400px; width: 100%;"></div>
     {% endif %}
 
 
@@ -93,13 +39,13 @@
         function submitForm() {
             let formattedWaypoints = document.getElementById('formattedWaypoints').innerText;
             document.getElementById('waypointsInput').value = formattedWaypoints;
-    
+
             document.getElementById('myForm').submit();
         }
     </script>
     <script>
         var waypoints = [];
-    
+
         function addWaypoint() {
             var waypointInput = document.getElementById("waypoint");
             var waypointValue = waypointInput.value.trim();
@@ -109,7 +55,7 @@
                 waypointInput.value = "";
             }
         }
-    
+
         function updateFormattedWaypoints() {
             var formattedWaypointsDiv = document.getElementById("formattedWaypoints");
             var start = document.getElementById("start").value.trim();
@@ -117,7 +63,7 @@
             var allWaypoints = [start].concat(waypoints, [end]);
             formattedWaypointsDiv.textContent = allWaypoints.join(", ");
         }
-    
+
         document.getElementById("waypoint").addEventListener("keypress", function (event) {
             if (event.key === "=") {
                 addWaypoint();
@@ -128,42 +74,42 @@
     <script>
         function initMap() {
             var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -34.397, lng: 150.644},
+                center: { lat: -34.397, lng: 150.644 },
                 zoom: 8
             });
 
-            var city_list = {{ city_list | tojson }};
+            var city_list = {{ city_list | tojson
+        }};
 
-            // Build path between cities using Google Maps Directions API
-            for (var i = 0; i < city_list.length - 1; i++) {
-                var directionsService = new google.maps.DirectionsService();
-                var request = {
-                    origin: city_list[i],
-                    destination: city_list[i+1],
-                    travelMode: 'DRIVING'
-                };
-                directionsService.route(request, function(response, status) {
-                    if (status == 'OK') {
-                        var directionsDisplay = new google.maps.DirectionsRenderer();
-                        directionsDisplay.setMap(map);
-                        directionsDisplay.setDirections(response);
-                    }
-                });
-            }
+        for (var i = 0; i < city_list.length - 1; i++) {
+            var directionsService = new google.maps.DirectionsService();
+            var request = {
+                origin: city_list[i],
+                destination: city_list[i + 1],
+                travelMode: 'DRIVING'
+            };
+            directionsService.route(request, function (response, status) {
+                if (status == 'OK') {
+                    var directionsDisplay = new google.maps.DirectionsRenderer();
+                    directionsDisplay.setMap(map);
+                    directionsDisplay.setDirections(response);
+                }
+            });
+        }
         }
     </script>
 
 
     <script>
         function submitForm() {
-    let formattedWaypoints = document.getElementById('formattedWaypoints').innerText;
-    document.getElementById('waypointsInput').value = formattedWaypoints;
+            let formattedWaypoints = document.getElementById('formattedWaypoints').innerText;
+            document.getElementById('waypointsInput').value = formattedWaypoints;
 
-    document.getElementById('myForm').submit();
-}
+            document.getElementById('myForm').submit();
+        }
     </script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
 
 </body>
-</html>

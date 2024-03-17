@@ -6,67 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
-    <style>
-        .container {
-            width: 500px;
-            height: 400px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-            display: flex;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        p {
-            color: #000;
-            text-align: left;
-            margin-left: 10%;
-            margin-right: 10%;
-            font-size: 22px;
-        }
-
-        a {
-            color: #569DAA;
-            text-decoration: none;
-        }
-
-        .button {
-            width: 200px;
-            height: 60px;
-            margin-bottom: 20px;
-            margin-top: 20px;
-        }
-
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin-left: 10%;
-        }
-
-        .title-and-orders {
-            display: flex;
-            flex-direction: column;
-            justify-content: top;
-        }
-
-        .order {
-            margin-bottom: 1%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .order:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/driver.css') }}">
 </head>
 
 <body>
@@ -78,55 +18,57 @@
             <h2>Current orders:</h2>
             {% for m in order_list %}
             <div class="order" data-id="{{ m }}" onclick="selectOrder(this)">
-                <p>{{ [m['last_point'], m['starting_point']] + m['additional']  if m['additional'] else [m['last_point'], m['starting_point']]}}</p>
+                <p>{{ [m['last_point'], m['starting_point']] + m['additional'] if m['additional'] else [m['last_point'],
+                    m['starting_point']]}}</p>
             </div>
             {% endfor %}
         </div>
     </div>
     <div class="buttons">
         <form action='/driver_page' method="post">
-            <button id="sendButton" type='submit' class="button">Відправити вибране</button>
-        </form>        
+            <button id="sendButton" type='submit' class="button">Accept the chosen order</button>
+        </form>
         <button class="button" onclick="window.location.href='Map.html'">See on a map</button>
     </div>
     <div>
-        <img class="profile" onclick="window.location.href='/profile'" src="{{ url_for('static', filename='assets/transperent_person.png') }}">
+        <img class="profile" onclick="window.location.href='/profile'"
+            src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
 
     <script>
         function selectOrder(element) {
-    document.querySelectorAll('.order').forEach(order => {
-        order.classList.remove('selected');
-    });
-    element.classList.add('selected');
-}
+            document.querySelectorAll('.order').forEach(order => {
+                order.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
 
-document.getElementById('sendButton').addEventListener('click', function(event) {
-    event.preventDefault();
+        document.getElementById('sendButton').addEventListener('click', function (event) {
+            event.preventDefault();
 
-    const selectedOrder = document.querySelector('.order.selected');
-    if (selectedOrder) {
-        const orderId = selectedOrder.getAttribute('data-id');
-        const formData = new FormData();
-        formData.append('orderId', orderId);
+            const selectedOrder = document.querySelector('.order.selected');
+            if (selectedOrder) {
+                const orderId = selectedOrder.getAttribute('data-id');
+                const formData = new FormData();
+                formData.append('orderId', orderId);
 
-        fetch('/driver_page', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-        .then(data => {
-            console.log('Дані успішно відправлено:', data);
-        }).catch(error => {
-            console.error('Помилка під час відправлення запиту:', error);
+                fetch('/driver_page', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log('Дані успішно відправлено:', data);
+                    }).catch(error => {
+                        console.error('Помилка під час відправлення запиту:', error);
+                    });
+            } else {
+                console.log('Спочатку виберіть замовлення');
+            }
         });
-    } else {
-        console.log('Спочатку виберіть замовлення');
-    }
-});
 
     </script>
-    
-    
+
+
 </body>
 
 </html>
