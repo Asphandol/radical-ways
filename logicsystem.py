@@ -211,7 +211,6 @@ def your_driver():
             {'user_id': ObjectId(session['my_id'])}
             )['waypoints_list']
 
-        print(city_list)
         return render_template('Y_your_driver.html', city_list = city_list)
 
     return render_template('Y_your_driver.html', city_list = city_list)
@@ -275,7 +274,7 @@ def change_info():
         surname = request.form['surname']
 
         if val.validate_name(name) and val.validate_surname(surname):
-            logic_sys.get_database.update_one(info, {"$pull": {'name': name, 'surname': surname}})
+            logic_sys.get_database.update_one(info, {"$set": {'name': name, 'surname': surname}})
             name_surname = info['name'] + " " + info['surname']
             return render_template('V_change_info.html', name_surname = name_surname)
 
@@ -296,17 +295,27 @@ def orders():
     all_orders = list(logic_sys.trips_database.find({}))
 
     for i in all_orders:
-        if len(order_list) != 3 and i['status'] == 'created':
+        if len(order_list) != 3: # and i['status'] == 'created':
             order_list.append(i)
         elif len(order_list) == 3:
             break
 
     if request.method == 'POST':
-        order = request.form.get('orderId')
-        logic_sys.trips_database.update_one(order, {'$pull': {'status': 'taken'}})
-        return redirect(url_for('in_way_proccess'))
+        action = request.form.get('action')
 
-    return render_template('M_driver.html', order_list = order_list)
+        if action == 'action1':
+            order = request.form.get('orderId')
+            logic_sys.trips_database.update_one(
+                order, {'$set': {'status': 'taken', 'driver': session['_id']}})
+            return redirect(url_for('in_way_proccess'))
+
+        if action == 'action1':
+            order = request.form.get('orderId')
+            city_list = order['waypoints_list']
+            print(city_list)
+            return render_template('M_driver.html', order_list = order_list, city_list = city_list)
+
+    return render_template('M_driver.html', order_list = order_list, city_list = [])
 
 @app.route('/in_way', methods=['POST', 'GET'])
 def in_way_proccess():

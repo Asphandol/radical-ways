@@ -17,9 +17,13 @@
         <h2>Change Info</h2>
         <div class="profile-container">
             <div>Current Name: <span id="old-name">{{ name_surname }}</span></div>
-            {% for msg in get_flashed_messages() %}
-            <div>{{msg}}</div>
-            {% endfor %}
+            {% if get_flashed_messages() %}
+                <div class="flash">
+                    {% for msg in get_flashed_messages() %}
+                    <div>{{msg}}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <form action='/change_info' method='post'>
                 <input type="text" class="input-field" placeholder="New First Name" name = 'name'>
                 <input type="text" class="input-field" placeholder="New Last Name" name = 'surname'>
