@@ -18,7 +18,7 @@
         <h2>Car type:</h2>
         <div class="text_type">XXXXXXXX</div>
         <from action='/your_driver' method='post'>
-        <button method = 'submit' class="button" style="width: 50%;">See on a map</button>
+            <button method = 'submit' class="button">See on a map</button>
         </from>
         {% if city_list %}
         <div id="map" style="height: 400px; width: 100%;"></div>
@@ -32,7 +32,7 @@
     </div>
 
     <div>
-        <img class="profile" onclick="window.location.href='V_profile.html'"
+        <img class="profile" onclick="window.location.href='/profile'"
             src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
 </body>
@@ -46,7 +46,6 @@
 
         var city_list = {{ city_list | tojson }};
 
-        // Build path between cities using Google Maps Directions API
         for (var i = 0; i < city_list.length - 1; i++) {
             var directionsService = new google.maps.DirectionsService();
             var request = {
@@ -63,27 +62,15 @@
             });
         }
     }
+
+    function initMapOnLoad() {
+        initMap();
+    }
+    window.addEventListener('load', initMapOnLoad);
 </script>
 
-<script>
-    $(document).ready(function(){
-        $(".button").click(function(){
-            $.ajax({
-                url: '/your_driver',
-                method: 'POST',
-                success: function(response){
-                    console.log('Request sent successfully!');
-                },
-                error: function(xhr, status, error){
-                    console.error('Error:', error);
-                }
-            });
-        });
-    });
 </script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </html>

@@ -16,23 +16,20 @@
     <div class="change-info-container">
         <h2>Change Info</h2>
         <div class="profile-container">
-            <div>Current Name: <span id="old-name">John Doe</span></div>
-            <input type="text" class="input-field" placeholder="New First Name" id="new-first-name">
-            <input type="text" class="input-field" placeholder="New Last Name" id="new-last-name">
-            <button class="button" onclick="acceptChanges()">Accept</button>
+            <div>Current Name: <span id="old-name">{{ name_surname }}</span></div>
+            {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+            {% endfor %}
+            <form action='/change_info' method='post'>
+                <input type="text" class="input-field" placeholder="New First Name" name = 'name'>
+                <input type="text" class="input-field" placeholder="New Last Name" name = 'surname'>
+                <button class="button" type='submit'>Accept</button>
+            </form>
             <img src="{{ url_for('static', filename='assets/stepan.jpg')}}" alt="Old Profile Photo"
                 class="profile-photo">
             <button class="button">Change Photo</button>
             <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
         </div>
-
-        <script>
-            function acceptChanges() {
-                var newFirstName = document.getElementById("new-first-name").value;
-                var newLastName = document.getElementById("new-last-name").value;
-                document.getElementById("old-name").innerText = newFirstName + " " + newLastName;
-            }
-        </script>
 </body>
 
 </html>

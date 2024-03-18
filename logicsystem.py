@@ -60,6 +60,8 @@ class LogicSystem:
 
 logic_sys = LogicSystem()
 
+val = Validator()
+
 @app.route('/')
 def start():
     """
@@ -110,8 +112,6 @@ def create_account():
 
     if request.method == 'POST':
 
-        val = Validator()
-
         name = request.form['name']
         surname = request.form['surname']
         email = request.form['email']
@@ -139,7 +139,7 @@ def create_account():
             flash('This data already in database')
             return render_template('O_sign-up.html')
 
-        dct = {'name': name, 'surnme': surname, 'email':email,
+        dct = {'name': name, 'surname': surname, 'email':email,
             'password': password}
 
         if car and licensee:
@@ -184,7 +184,8 @@ def choose_way():
         dct_info = {
                     'user_id': ObjectId(session['my_id']),
                     'waypoints_list': city_list,
-                    'status': 'created'
+                    'status': 'created',
+                    'driver': None
                     }
 
         if action == 'button2':
@@ -210,6 +211,7 @@ def your_driver():
             {'user_id': ObjectId(session['my_id'])}
             )['waypoints_list']
 
+        print(city_list)
         return render_template('Y_your_driver.html', city_list = city_list)
 
     return render_template('Y_your_driver.html', city_list = city_list)
@@ -228,13 +230,16 @@ def delete():
     '''
     if request.method == 'POST':
         password = request.form['password']
-        if session['password'] == password:
+        real_password = \
+            logic_sys.get_database.find_one({'_id': ObjectId(session['my_id'])})['password']
+
+        if real_password == password:
             logic_sys.get_database.delete_one({'password': password})
-            session['password'] = None
+            session['my_id'] = None
             return redirect(url_for('start'))
-        else:
-            flash('Wrong password')
-            return render_template('V_delete_account.html')
+
+        flash('Wrong password')
+        return render_template('V_delete_account.html')
 
     return render_template('V_delete_account.html')
 
@@ -254,13 +259,29 @@ def get_help():
         return redirect(url_for('profile'))
     return render_template('V_get_help.html')
 
-@app.route('/change_info')
-def change_info(person, change_data):
+@app.route('/change_info', methods = ['POST', 'GET'])
+def change_info():
     """
     changes info about person
     """
-    logic_sys.get_database.update_one(person, {"$set": change_data})
-    return render_template('V_change_info.html')
+    info = logic_sys.get_database.find_one({"_id": ObjectId(session['my_id'])})
+    name_surname = info['name'] + " " + info['surname']
+
+    if request.method == 'POST':
+        name = request.form['name']
+        surname = request.form['surname']
+
+        if val.validate_name(name) and val.validate_surname(surname):
+            logic_sys.get_database.update_one(info, {"$pull": {'name': name, 'surname': surname}})
+            name_surname = info['name'] + " " + info['surname']
+            return render_template('V_change_info.html', name_surname = name_surname)
+
+        flash('invalid input name surname')
+        return render_template('V_change_info.html', name_surname = name_surname)
+    # person, change_data
+
+    # logic_sys.get_database.update_one(person, {"$pull": change_data})
+    return render_template('V_change_info.html', name_surname = name_surname)
 
 @app.route('/driver_page', methods=['POST', 'GET'])
 def orders():
