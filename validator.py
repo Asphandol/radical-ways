@@ -55,15 +55,15 @@ class Validator:
         """
         if '@' not in email or '.' not in email:
             return False
-
+        
         if len(email.split('@'))!=2:
             return False
-
+ 
         if len(email.split('@')[1].split('.'))!=2:
             return False
-
+        
         return True
-
+        
 
 
     def validate_password(self, password: str):
