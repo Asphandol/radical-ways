@@ -60,3 +60,8 @@ a {
 .button {
     margin: 1%;
 }
+
+.disabled-button {
+    opacity: 0.5;
+    pointer-events: none;
+}
