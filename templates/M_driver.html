@@ -17,17 +17,16 @@
         <div id="orders" class="title-and-orders">
             <h2>Current orders:</h2>
             {% for m in order_list %}
-            <div class="order" data-id="{{ m }}" onclick="selectOrder(this)">
-                <p>{{ [m['last_point'], m['starting_point']] + m['additional'] if m['additional'] else [m['last_point'],
-                    m['starting_point']]}}</p>
-            </div>
+                <div class="order" data-id="{{ m }}" onclick="selectOrder(this)">
+                    <p>{{m['waypoints_list']}}</p>
+                </div>
             {% endfor %}
         </div>
     </div>
     <div class="buttons">
         <form action='/driver_page' method="post">
-            <button id="sendButton" type='submit' name="action1" class="button">Accept the chosen order</button>
-            <button id="sendButton" type='submit' name="action2" class="button">See on a map</button>
+            <button id="acceptButton" type = 'submit' name="action" value="button1" class="button">Accept the chosen order</button>
+            <button id="mapButton" type = 'submit' name="action" value="button2" class="button">See on a map</button>
         </form>
     </div>
     <div>
@@ -47,7 +46,7 @@
             element.classList.add('selected');
         }
 
-        document.getElementById('sendButton').addEventListener('click', function (event) {
+        document.getElementById('acceptButton').addEventListener('click', function (event) {
             event.preventDefault();
 
             const selectedOrder = document.querySelector('.order.selected');
@@ -55,6 +54,7 @@
                 const orderId = selectedOrder.getAttribute('data-id');
                 const formData = new FormData();
                 formData.append('orderId', orderId);
+                formData.append('action', 'button1');
 
                 fetch('/driver_page', {
                     method: 'POST',
@@ -69,6 +69,29 @@
                 console.log('Спочатку виберіть замовлення');
             }
         });
+
+        document.getElementById('mapButton').addEventListener('click', function (event) {
+            event.preventDefault();
+            const selectedOrder = document.querySelector('.order.selected');
+            if (selectedOrder) {
+                const orderId = selectedOrder.getAttribute('data-id');
+                const formData = new FormData();
+                formData.append('orderId', orderId);
+                formData.append('action', 'button2');
+
+                fetch('/driver_page', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log('Дані успішно відправлено:', data);
+                    }).catch(error => {
+                        console.error('Помилка під час відправлення запиту:', error);
+                    });
+            } else {
+                console.log('Спочатку виберіть замовлення');
+            }
+        }); 
 
     </script>
 

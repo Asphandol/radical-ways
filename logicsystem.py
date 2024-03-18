@@ -168,17 +168,31 @@ def choose_way():
         startt = request.form['start']
         end = request.form['end']
 
-        if request.form['waypoints']:
-            waypoints = request.form['waypoints'].split(', ')
-            waypoints.remove(end)
-            waypoints.remove(startt)
+        if len(request.form['waypoints']) != 1:
+                waypoints = request.form['waypoints'].split(', ')
+                waypoints.remove(end)
+                waypoints.remove(startt)
         else:
             waypoints = []
 
-        mapa = Map(startt, end, waypoints)
-        city_list = mapa.take_map_data()
+        try:
+            if not waypoints:
+                    mapa = Map(startt, end, waypoints)
+                    city_list = mapa.take_map_data()
+            else:
+                city_list = [startt, end]
+        except:
+            city_list = None
+            flash('not enough data')
+            return render_template('M_user.html', city_list = city_list)
 
-        if action == 'button1':
+        try:
+            if action == 'button1':
+                return render_template('M_user.html', city_list = city_list)
+
+        except:
+            city_list = None
+            flash('not enough data')
             return render_template('M_user.html', city_list = city_list)
 
         dct_info = {
@@ -295,24 +309,23 @@ def orders():
     all_orders = list(logic_sys.trips_database.find({}))
 
     for i in all_orders:
-        if len(order_list) != 3: # and i['status'] == 'created':
+        if len(order_list) != 3 and i['status'] == 'created':
             order_list.append(i)
         elif len(order_list) == 3:
             break
 
     if request.method == 'POST':
         action = request.form.get('action')
+        order = request.form.get('orderId')
+        order = eval(order)
 
-        if action == 'action1':
-            order = request.form.get('orderId')
+        if action == 'button1':
             logic_sys.trips_database.update_one(
                 order, {'$set': {'status': 'taken', 'driver': session['_id']}})
             return redirect(url_for('in_way_proccess'))
 
-        if action == 'action1':
-            order = request.form.get('orderId')
+        if action == 'button2':
             city_list = order['waypoints_list']
-            print(city_list)
             return render_template('M_driver.html', order_list = order_list, city_list = city_list)
 
     return render_template('M_driver.html', order_list = order_list, city_list = [])

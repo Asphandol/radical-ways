@@ -13,6 +13,13 @@
         <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
     <div class="order-container">
+        {% if get_flashed_messages() %}
+            <div class="flash">
+                {% for msg in get_flashed_messages() %}
+                <div>{{msg}}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <form id="myForm" action='/choose_way' method='post'>
             <input class="input-field" type="text" name='start' id="start" placeholder="Початок"><br><br>
             <input class="input-field" type="text" name='end' id="end" placeholder="Кінець"><br><br>
