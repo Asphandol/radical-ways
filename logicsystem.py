@@ -168,17 +168,31 @@ def choose_way():
         startt = request.form['start']
         end = request.form['end']
 
-        if request.form['waypoints']:
-            waypoints = request.form['waypoints'].split(', ')
-            waypoints.remove(end)
-            waypoints.remove(startt)
+        if len(request.form['waypoints']) != 1:
+                waypoints = request.form['waypoints'].split(', ')
+                waypoints.remove(end)
+                waypoints.remove(startt)
         else:
             waypoints = []
 
-        mapa = Map(startt, end, waypoints)
-        city_list = mapa.take_map_data()
+        try:
+            if not waypoints:
+                    mapa = Map(startt, end, waypoints)
+                    city_list = mapa.take_map_data()
+            else:
+                city_list = [startt, end]
+        except:
+            city_list = None
+            flash('not enough data')
+            return render_template('M_user.html', city_list = city_list)
 
-        if action == 'button1':
+        try:
+            if action == 'button1':
+                return render_template('M_user.html', city_list = city_list)
+
+        except:
+            city_list = None
+            flash('not enough data')
             return render_template('M_user.html', city_list = city_list)
 
         dct_info = {
@@ -284,12 +298,6 @@ def change_info():
 
     # logic_sys.get_database.update_one(person, {"$pull": change_data})
     return render_template('V_change_info.html', name_surname = name_surname)
-
-# def transfer(strings):
-#     """
-#     transfers str to dict
-#     """
-#     lst = strings.split(', ')
 
 @app.route('/driver_page', methods=['POST', 'GET'])
 def orders():
