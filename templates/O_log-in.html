@@ -17,9 +17,13 @@
     </div>
     <div class="container">
         <h2>Log in</h2>
-        {% for msg in get_flashed_messages() %}
-        <div>{{msg}}</div>
-        {% endfor %}
+        {% if get_flashed_messages() %}
+            <div class="flash">
+                {% for msg in get_flashed_messages() %}
+                <div>{{msg}}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <form action='/log_in' method='post'>
             <div class="input-container">
                 <input type="text" class="input-field" name='email' id='email' placeholder="email">

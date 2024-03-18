@@ -216,11 +216,14 @@ def your_driver():
 
     return render_template('Y_your_driver.html', city_list = city_list)
 
-@app.route('/profile')
+@app.route('/profile', methods = ['POST', 'GET'])
 def profile():
     """
     profile for our user
     """
+    if request.method == 'POST':
+        session['my_id'] = None
+        return render_template('O_start-page.html')
     return render_template('V_profile.html')
 
 @app.route('/delete_acccount', methods = ['POST', 'GET'])
