@@ -42,20 +42,6 @@
     {% endif %}
 
     <script>
-        function changeButtonText() {
-            var btn = document.getElementById('findDriverBtn');
-            btn.textContent = "Searching for a driver...";
-            btn.disabled = true;
-            btn.classList.add("disabled-button");
-        }
-
-        function findDriver() {
-            changeButtonText();
-            // submitForm();
-        }
-    </script>
-
-    <script>
         function submitForm() {
             let formattedWaypoints = document.getElementById('formattedWaypoints').innerText;
             document.getElementById('waypointsInput').value = formattedWaypoints;
@@ -136,8 +122,7 @@
         }
     </script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
 
 </body>
-
-</html>
