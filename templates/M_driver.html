@@ -39,59 +39,64 @@
     {% endif %}
 
     <script>
-        function selectOrder(element) {
-            document.querySelectorAll('.order').forEach(order => {
-                order.classList.remove('selected');
-            });
-            element.classList.add('selected');
-        }
-
         document.getElementById('acceptButton').addEventListener('click', function (event) {
-            event.preventDefault();
+    event.preventDefault();
 
-            const selectedOrder = document.querySelector('.order.selected');
-            if (selectedOrder) {
-                const orderId = selectedOrder.getAttribute('data-id');
-                const formData = new FormData();
-                formData.append('orderId', orderId);
-                formData.append('action', 'button1');
+    const selectedOrder = document.querySelector('.order.selected');
+    if (selectedOrder) {
+        const orderId = selectedOrder.getAttribute('data-id');
+        const formData = new FormData();
+        formData.append('orderId', orderId);
+        formData.append('action', 'button1');
 
-                fetch('/driver_page', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.json())
-                    .then(data => {
-                        console.log('Дані успішно відправлено:', data);
-                    }).catch(error => {
-                        console.error('Помилка під час відправлення запиту:', error);
-                    });
+        fetch('/driver_page', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
             } else {
-                console.log('Спочатку виберіть замовлення');
+                return response.json();
             }
+        }).then(data => {
+            console.log('Дані успішно відправлено:', data);
+        }).catch(error => {
+            console.error('Помилка під час відправлення запиту:', error);
         });
+    } else {
+        console.log('Спочатку виберіть замовлення');
+    }
+});
+</script>
+<script>
+document.getElementById('mapButton').addEventListener('click', function (event) {
+    event.preventDefault();
+    const selectedOrder = document.querySelector('.order.selected');
+    if (selectedOrder) {
+        const orderId = selectedOrder.getAttribute('data-id');
+        const formData = new FormData();
+        formData.append('orderId', orderId);
+        formData.append('action', 'button2');
 
-        document.getElementById('mapButton').addEventListener('click', function (event) {
-            event.preventDefault();
-            const selectedOrder = document.querySelector('.order.selected');
-            if (selectedOrder) {
-                const orderId = selectedOrder.getAttribute('data-id');
-                const formData = new FormData();
-                formData.append('orderId', orderId);
-                formData.append('action', 'button2');
-
-                fetch('/driver_page', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.json())
-                    .then(data => {
-                        console.log('Дані успішно відправлено:', data);
-                    }).catch(error => {
-                        console.error('Помилка під час відправлення запиту:', error);
-                    });
+        fetch('/driver_page', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
             } else {
-                console.log('Спочатку виберіть замовлення');
+                return response.json();
             }
-        }); 
+        }).then(data => {
+            console.log('Дані успішно відправлено:', data);
+        }).catch(error => {
+            console.error('Помилка під час відправлення запиту:', error);
+        });
+    } else {
+        console.log('Спочатку виберіть замовлення');
+    }
+});
+
 
     </script>
 
@@ -105,8 +110,7 @@
                 zoom: 8
             });
 
-            var city_list = {{ city_list | tojson
-        }};
+            var city_list = {{ city_list | tojson }};
 
         for (var i = 0; i < city_list.length - 1; i++) {
             var directionsService = new google.maps.DirectionsService();
