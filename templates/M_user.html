@@ -21,7 +21,8 @@
             <input type="hidden" name="waypoints" id="waypointsInput">
             <div class="buttons">
                 <button onclick="submitForm()" class="button" name="action" value="button1">View on a map</button>
-                <button onclick="submitForm()" class="button" name="action" value="button2">Find a driver</button>
+                <button onclick="submitForm()" class="button" name="action" value="button2" id="findDriverBtn">Find a
+                    driver</button>
             </div>
         </form>
     </div>
@@ -34,7 +35,14 @@
     <div id="map" style="height: 400px; width: 100%;"></div>
     {% endif %}
 
+    <script>
+        function changeButtonText() {
+            var btn = document.getElementById('findDriverBtn');
+            btn.textContent = "Searching for a driver...";
+        }
 
+        document.getElementById('findDriverBtn').addEventListener('click', changeButtonText);
+    </script>
     <script>
         function submitForm() {
             let formattedWaypoints = document.getElementById('formattedWaypoints').innerText;
