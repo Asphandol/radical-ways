@@ -2,9 +2,12 @@
 logic system for our customers
 """
 import pymongo
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session, jsonify
 import googlemaps
 import requests
+from bson import ObjectId
+from PIL import Image
+import time
 from validator import Validator
 
 app = Flask(__name__)
@@ -12,7 +15,7 @@ app = Flask(__name__)
 API_KEY = "AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA"
 gmaps = googlemaps.Client(key=API_KEY)
 
-app.config['SECRET_KEY'] = 'dghskdhfsljhglyufluckjg'
+app.secret_key = 'mega_secret_key'
 
 class LogicSystem:
     """
@@ -24,7 +27,7 @@ class LogicSystem:
         """
         gives an account database
         """
-        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        client = pymongo.MongoClient("mongodb+srv://melnykpn:Mascara_2006@radicalways.gbpcvjs.mongodb.net/?retryWrites=true&w=majority&appName=Radicalways")
         db = client["Radical_ways"]
         return db["accounts"]
 
@@ -33,7 +36,7 @@ class LogicSystem:
         """
         gives an trips database
         """
-        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        client = pymongo.MongoClient("mongodb+srv://Oleg:Oleg@radicalways.gbpcvjs.mongodb.net/?retryWrites=true&w=majority&appName=Radicalways")
         db = client["Radical_ways"]
         return db["trips"]
 
@@ -41,36 +44,23 @@ class LogicSystem:
         """
         logging in a person
         """
-        if data["mail"] in self.get_database.find_one():
-            return True
-        if data["mail"] != self.get_database.find_one()[data["password"]]:
-            return True
-        # data = {"mail": "shtohryn.pn@ucu.edu.ua", "password": "nadvirna4ever"}
-        # result = self.get_database.find_one(data)
-        # return "Welcome back, " + result['name'].capitalize()
-        return False
+        return self.get_database.find_one(data)
 
     def sign_up(self, data: dict):
         """
         helps a new person to sign up
         """
-        # data = {"mail": "melnyk.pn@ucu.edu.ua", "password": "watch__us", "is_driver": False}
         self.get_database.insert_one(data)
-        return data["name"] + ", Thank you for joining us"
 
-    def make_order(self):
+    def add_order(self, waypooints_lst: list):
         """
-        makes an order 
+        adds order in database
         """
-        pass
-
-    def show_map(self):
-        """
-        shows a map
-        """
-        pass
+        self.trips_database.insert_one(waypooints_lst)
 
 logic_sys = LogicSystem()
+
+val = Validator()
 
 @app.route('/')
 def start():
@@ -88,16 +78,195 @@ def logg_in():
         email = request.form['email']
         password = request.form['password']
 
-        if logic_sys.log_in({'mail': email, 'password': password}):
-            flash('wrong data')
+        if not email and not password:
+            flash('No input data')
+            return render_template('O_log-in.html')
+
+        if not email:
+            flash('You need to input email')
+            return render_template('O_log-in.html')
+
+        if not password:
+            flash('You need to input password')
+            return render_template('O_log-in.html')
+
+        if not bool(logic_sys.log_in({'email': email, 'password': password})):
+            flash('There are no such data')
+            return render_template('O_log-in.html')
+
+        session['my_id'] = str(logic_sys.log_in({'email': email, 'password': password})['_id'])
+
+        if 'car' in logic_sys.log_in({'email': email, 'password': password}):
+
+            return redirect(url_for('orders'))
+
+        return redirect(url_for('choose_way'))
 
     return render_template('O_log-in.html')
 
-@app.route('/delete_acccount')
+@app.route('/sign_up', methods = ['POST', 'GET'])
+def create_account():
+    """
+    creates an account
+    """
+
+    if request.method == 'POST':
+
+        name = request.form['name']
+        surname = request.form['surname']
+        email = request.form['email']
+        password = request.form['password']
+        car = request.form['car']
+        licensee = request.form['license']
+
+        if not val.validate_name(name):
+            flash('You failed name(fisrt symb- upper)')
+            return render_template('O_sign-up.html')
+
+        if not val.validate_surname(surname):
+            flash('You failed surname(fisrt sym- upper)')
+            return render_template('O_sign-up.html')
+
+        if not val.validate_email(email):
+            flash('You failed email(example: aaa@uuu.com)')
+            return render_template('O_sign-up.html')
+
+        if not val.validate_password(password):
+            flash('You failed password(starts with numb or letter)')
+            return render_template('O_sign-up.html')
+
+        if logic_sys.get_database.find_one({"email" : email}):
+            flash('This data already in database')
+            return render_template('O_sign-up.html')
+
+        dct = {'name': name, 'surname': surname, 'email':email,
+            'password': password}
+
+        if car and licensee:
+            dct['car'] = car
+            dct['license'] = licensee
+
+        logic_sys.sign_up(dct)
+        session['my_id'] = str(logic_sys.log_in({'email': email, 'password': password})['_id'])
+
+        if 'car' in dct:
+            return redirect(url_for('orders'))
+        return redirect(url_for('choose_way'))
+
+    return render_template('O_sign-up.html' )
+
+@app.route('/choose_way', methods = ['POST', 'GET'])
+def choose_way():
+    """
+    delets person from app
+    """
+
+    city_list = []
+
+    if request.method == 'POST':
+        action = request.form['action']
+        startt = request.form['start']
+        end = request.form['end']
+
+        if len(request.form['waypoints']) != 1:
+                waypoints = request.form['waypoints'].split(', ')
+                waypoints.remove(end)
+                waypoints.remove(startt)
+        else:
+            waypoints = []
+
+        try:
+            if not waypoints:
+                    mapa = Map(startt, end, waypoints)
+                    city_list = mapa.take_map_data()
+            else:
+                city_list = [startt, end]
+        except:
+            city_list = None
+            flash('not enough data')
+            return render_template('M_user.html', city_list = city_list)
+
+        try:
+            if action == 'button1':
+                return render_template('M_user.html', city_list = city_list)
+
+        except:
+            city_list = None
+            flash('not enough data')
+            return render_template('M_user.html', city_list = city_list)
+
+        dct_info = {
+                    'user_id': ObjectId(session['my_id']),
+                    'waypoints_list': city_list,
+                    'status': 'created',
+                    'driver': None
+                    }
+
+        if action == 'button2':
+            logic_sys.trips_database.insert_one(dct_info)
+            trip_id = logic_sys.trips_database.find_one(dct_info)
+            while True:
+                time.sleep(2)
+                try:
+                    logic_sys.trips_database.find_one(trip_id)['status']
+                except TypeError:
+                    return redirect(url_for('your_driver'))
+
+    return render_template('M_user.html',city_list = [])
+
+@app.route('/your_driver', methods = ['POST', 'GET'])
+def your_driver():
+    """
+    renders your driver page
+    """
+    city_list = []
+    if request.form == 'POST':
+        city_list = logic_sys.trips_database.find_one(
+            {'user_id': ObjectId(session['my_id'])}
+            )['waypoints_list']
+
+        return render_template('Y_your_driver.html', city_list = city_list)
+
+    return render_template('Y_your_driver.html', city_list = city_list)
+
+@app.route('/profile', methods = ['POST', 'GET'])
+def profile():
+    """
+    profile for our user
+    """
+    if request.method == 'POST':
+        action = request.form['action']
+
+        if action == 'b1':
+            info = logic_sys.get_database.find_one({'_id': ObjectId(session['my_id'])})
+            if 'car' in info:
+                return redirect(url_for('orders'))
+            return redirect(url_for('choose_way'))
+
+        if action == 'b2':
+            session['my_id'] = None
+            return render_template('O_start-page.html')
+
+    return render_template('V_profile.html')
+
+@app.route('/delete_acccount', methods = ['POST', 'GET'])
 def delete():
     '''
     deletes an account
     '''
+    if request.method == 'POST':
+        password = request.form['password']
+        real_password = \
+            logic_sys.get_database.find_one({'_id': ObjectId(session['my_id'])})['password']
+
+        if real_password == password:
+            logic_sys.get_database.delete_one({'password': password})
+            session['my_id'] = None
+            return redirect(url_for('start'))
+
+        flash('Wrong password')
+        return render_template('V_delete_account.html')
+
     return render_template('V_delete_account.html')
 
 @app.route('/main')
@@ -107,139 +276,111 @@ def main():
     '''
     return render_template('O_main.html')
 
-@app.route('/change_info')
-def change():
-    '''
-    changes info
-    '''
-    return render_template('V_change_info.html')
-
-@app.route('/get_help')
+@app.route('/get_help', methods = ['POST', 'GET'])
 def get_help():
     '''
     gets help
     '''
+    if request.method == 'POST':
+        return redirect(url_for('profile'))
     return render_template('V_get_help.html')
 
-@app.route('/sign_in', methods = ['POST', 'GET'])
-def create_account():
-    """
-    creates an account
-    """
-
-    if request.method == 'POST':
-
-        val = Validator()
-
-        name = request.form['name']
-        surname = request.form['surname']
-        email = request.form['email']
-        password = request.form['password']
-        car = request.form['car']
-        licensee = request.form['license']
-
-        if not (val.validate_name(name) and val.validate_surname(surname) and\
-        val.validate_email(email) and val.validate_password(password)):
-            flash('You failed registration requirement')
-
-        dct = {'name': name, 'surnme': surname, 'email':email,
-            'password': password}
-
-        if car and licensee:
-            dct['car'] = car
-            dct['license'] = licensee
-
-        logic_sys.sign_up(dct)
-        return redirect(url_for('choose_way'))
-
-    return render_template('O_sign-in.html')
-
-@app.route('/choose_way')
-def choose_way():
-    """
-    delets person from app
-    """
-    return render_template('M_user.html')
-
-@app.route('/delete')
-def delete_person(data: dict):
-    """
-    delets person from app
-    """
-    logic_sys.get_database.delete_one(data)
-    return render_template('regestartion.html')
-
-@app.route('/change_info')
-def change_info(person, change_data):
+@app.route('/change_info', methods = ['POST', 'GET'])
+def change_info():
     """
     changes info about person
     """
-    logic_sys.get_database.update_one(person, {"$set": change_data})
+    info = logic_sys.get_database.find_one({"_id": ObjectId(session['my_id'])})
+    name_surname = info['name'] + " " + info['surname']
 
-@app.route('/driver_page')
+    if request.method == 'POST':
+        name = request.form['name']
+        surname = request.form['surname']
+
+        if val.validate_name(name) and val.validate_surname(surname):
+            logic_sys.get_database.update_one(info, {"$set": {'name': name, 'surname': surname}})
+            name_surname = info['name'] + " " + info['surname']
+            return render_template('V_change_info.html', name_surname = name_surname)
+
+        flash('invalid input name surname')
+        return render_template('V_change_info.html', name_surname = name_surname)
+    # person, change_data
+
+    # logic_sys.get_database.update_one(person, {"$pull": change_data})
+    return render_template('V_change_info.html', name_surname = name_surname)
+
+def str_to_dict(string: str) -> dict:
+    """
+    str to dictionary
+    """
+    return eval(string)
+
+@app.route('/driver_page', methods=['POST', 'GET'])
 def orders():
     """
     shows all orders for drivers
     """
-    pass
+    order_list = []
 
-class Person:
+    all_orders = list(logic_sys.trips_database.find({}))
+
+    for i in all_orders:
+        if len(order_list) != 3 and i['status'] == 'created':
+            order_list.append(i)
+        elif len(order_list) == 3:
+            break
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+        order = request.form.get('orderId')
+        order = str_to_dict(order)
+
+        if action == 'button1':
+            logic_sys.trips_database.update_one(
+                order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
+            return render_template('V_driver_map.html')
+
+        if action == 'button2':
+            city_list = order['waypoints_list']
+            return render_template('M_driver.html', order_list = order_list, city_list = city_list)
+
+    return render_template('M_driver.html', order_list = order_list, city_list = [])
+
+@app.route('/in_way', methods=['POST', 'GET'])
+def in_way_proccess():
     """
-    a person class
-    """
-    def __init__(self, name: str, surname: str, email_adress: str, password: str) -> None:
-
-        self.name = name
-        self.surname = surname
-        self.email_adress = email_adress
-        self.password = password
-        self.is_registred = True
-
-class Driver(Person):
-    """
-    driver class
+    represents driver in a way
     """
 
-    def __init__(self, name: str, surname: str,
-                email_adress: str, password: str,
-                car: str, license_num: int) -> None:
+    lst_ways = []
 
-        super().__init__(name, surname, email_adress, password)
+    if request.method == 'POST':
 
-        self.is_driver = True
-        self.car = car
-        self.license_num = license_num
-        self.is_able = True
+        action = request.form['action']
 
-    def respond(self):
-        """
-        makes a respond on users rquest
-        """
-        pass
+        if action == 'button1':
+            logic_sys.trips_database.delete_one(session['order_id'])
+            return redirect(url_for('orders'))
 
-    def finish_order(self):
-        """
-        finish users order
-        """
-        pass
+        if action == 'button2':
+            logic_sys.trips_database.delete_one(session['order_id'])
+            session['order_id']['in_proccess'] = False
+            logic_sys.add_order(session['order_id'])
+            return redirect(url_for('orders'))
 
-    def accept(self):
-        """
-        accept users request        
-        """
-        pass
+        if action == 'button3':
+            lst_ways = [session['order_id']['start'], session['order_id']['end']]\
+             + session['order_id']['waypoints']
+            return render_template('O_main.html', lst_ways = lst_ways)
 
-    def reject(self):
-        """
-        reject users request
-        """
-        pass
+    return render_template('O_main.html', lst_ways = lst_ways)
 
-    def end_session(self):
-        """
-        ends session with user
-        """
-        pass
+@app.errorhandler(404)
+def page_not_found(error):
+    """
+    page is not found erroe
+    """
+    return render_template('V_not_found.html')
 
 class Order:
     """
@@ -256,28 +397,21 @@ class Map:
     paving the way
     """
 
-    def __init__(self, start: str, other_places: list) -> None:
-        self.start = start
-        self.other_places = other_places
+    def __init__(self, startt: str, end: str, other_places: list) -> None:
+        self.startt = startt
+        self.other_places = other_places if other_places else []
+        self.end = end
 
-    @app.route('/')
     def take_map_data(self):
         """
         creates the best way beetween multiple places
         """
-        if request.method == 'POST':
+        lst_places = [self.startt, self.end] + self.other_places
 
-            start = request.form['start']
-            finish = request.form['finish']
-            addintional_points = request.form['addintional_points'].split(',')
-            lst_places = [start, finish] + addintional_points
+        dct_dist = self.make_dist(lst_places)
+        way = self.greedy_shortest_path(self.startt, self.end, dct_dist, lst_places)
 
-            dct_dist = self.make_dist(lst_places)
-            way = self.greedy_shortest_path(start, finish, dct_dist, lst_places)
-            directions_result = gmaps.directions(way[0], \
-            way[-1], waypoints = way[1:-1], mode = "driving")
-
-            return render_template('user_page.html', api_key=API_KEY, directions=directions_result)
+        return way
 
     def make_dist(self, lst_places: list):
         """
@@ -307,16 +441,14 @@ class Map:
         return distances
 
     @staticmethod
-    def greedy_shortest_path(graph, start, end, all_points):
+    def greedy_shortest_path(startt, end, graph, all_points):
         """
         makes a shortest path
         """
-        if len(all_points) ==2:
-            return [start, end]
         unvisited = set(all_points)
-        path = [start]
-        current = start
-        unvisited.remove(start)
+        path = [startt]
+        current = startt
+        unvisited.remove(startt)
 
         while unvisited:
             next_node = None
