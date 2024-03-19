@@ -359,20 +359,19 @@ def in_way_proccess():
 
     return render_template('O_main.html', lst_ways = lst_ways)
 
+@app.route('/driver_map')
+def driver_map():
+    """
+    driver map
+    """
+    return render_template('V_driver_map.html', city_list = [])
+
 @app.errorhandler(404)
 def page_not_found(error):
     """
     page is not found erroe
     """
     return render_template('V_not_found.html')
-
-class Order:
-    """
-    creates an users order
-    """
-    def __init__(self) -> None:
-        self.is_finised = False
-        self.__route = None
 
 class Map:
     """

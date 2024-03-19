@@ -1,0 +1,25 @@
+.map {
+    height: 80%;
+    width: 100%;
+}
+
+.button {
+    width: 200px;
+    height: 60px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+.buttons {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.map-and-buttons {
+    height: 80%;
+    width: 80%;
+}

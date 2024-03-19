@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/driver_map.css') }}">
+</head>
+
+<body>
+    <div class="map-and-buttons">
+        <div id="map" class="map"></div>
+        <form action='/driver_map' method="post">
+            <div class="buttons">
+                <button id="acceptButton" type='submit' name="action" value="button1" class="button">Accept the
+                    order</button>
+                <button onclick="window.location.href='/driver_page'" name="action" class="button">Back
+                    to orders</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
+
+<script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -34.397, lng: 150.644 },
+            zoom: 8
+        });
+
+        var city_list = {{ city_list | tojson
+    }};
+
+    for (var i = 0; i < city_list.length - 1; i++) {
+        var directionsService = new google.maps.DirectionsService();
+        var request = {
+            origin: city_list[i],
+            destination: city_list[i + 1],
+            travelMode: 'DRIVING'
+        };
+        directionsService.route(request, function (response, status) {
+            if (status == 'OK') {
+                var directionsDisplay = new google.maps.DirectionsRenderer();
+                directionsDisplay.setMap(map);
+                directionsDisplay.setDirections(response);
+            }
+        });
+    }
+}
+</script>
