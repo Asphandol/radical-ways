@@ -338,7 +338,7 @@ def orders():
         if action == 'button1':
             logic_sys.trips_database.update_one(
                 order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
-            return render_template('V_driver_map.html')
+            return redirect(url_for('in_way_proccess'))
 
         if action == 'button2':
             city_list = order['waypoints_list']
@@ -375,20 +375,34 @@ def in_way_proccess():
 
     return render_template('O_main.html', lst_ways = lst_ways)
 
+@app.route('/driver_map', methods=['POST', 'GET'])
+def driver_map():
+    """
+    driver map
+    """
+    if request.method == 'POST':
+
+        action = request.form.get('action')
+        order = request.form.get('orderId')
+        order = str_to_dict(order)
+
+        if action == 'button1':
+            logic_sys.trips_database.update_one(
+                order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
+            return redirect(url_for('in_way_proccess'))
+
+        if action == 'button2':
+            return redirect(url_for('orders'))
+
+
+    return render_template('V_driver_map.html', city_list = [])
+
 @app.errorhandler(404)
 def page_not_found(error):
     """
     page is not found erroe
     """
     return render_template('V_not_found.html')
-
-class Order:
-    """
-    creates an users order
-    """
-    def __init__(self) -> None:
-        self.is_finised = False
-        self.__route = None
 
 class Map:
     """
