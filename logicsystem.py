@@ -2,7 +2,7 @@
 logic system for our customers
 """
 import pymongo
-from flask import Flask, render_template, request, flash, redirect, url_for, session
+from flask import Flask, render_template, request, flash, redirect, url_for, session, jsonify
 import googlemaps
 import requests
 from bson import ObjectId
@@ -235,8 +235,18 @@ def profile():
     profile for our user
     """
     if request.method == 'POST':
-        session['my_id'] = None
-        return render_template('O_start-page.html')
+        action = request.form['action']
+
+        if action == 'b1':
+            info = logic_sys.get_database.find_one({'_id': ObjectId(session['my_id'])})
+            if 'car' in info:
+                return redirect(url_for('orders'))
+            return redirect(url_for('choose_way'))
+
+        if action == 'b2':
+            session['my_id'] = None
+            return render_template('O_start-page.html')
+
     return render_template('V_profile.html')
 
 @app.route('/delete_acccount', methods = ['POST', 'GET'])
@@ -299,6 +309,12 @@ def change_info():
     # logic_sys.get_database.update_one(person, {"$pull": change_data})
     return render_template('V_change_info.html', name_surname = name_surname)
 
+def str_to_dict(string: str) -> dict:
+    """
+    str to dictionary
+    """
+    return eval(string)
+
 @app.route('/driver_page', methods=['POST', 'GET'])
 def orders():
     """
@@ -317,11 +333,11 @@ def orders():
     if request.method == 'POST':
         action = request.form.get('action')
         order = request.form.get('orderId')
-        order = eval(order)
+        order = str_to_dict(order)
 
         if action == 'button1':
             logic_sys.trips_database.update_one(
-                order, {'$set': {'status': 'taken', 'driver': session['_id']}})
+                order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
             return redirect(url_for('in_way_proccess'))
 
         if action == 'button2':
