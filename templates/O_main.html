@@ -16,15 +16,15 @@
         <h1>Info about route</h1>
         <form action='/in_way' method='post'>
             <div class="buttons">
-                <button class="button" type='submit' name = 'action' value="button1">Finish order</button>
-                <button class="button" type='submit' name = 'action' value="button2">Reject</button>
-                <button class="button" type='submit' name = 'action' value="button3">See on a map</button>
+                <button class="button" type='submit' name='action' value="button1">Finish order</button>
+                <button class="button" type='submit' name='action' value="button2">Reject</button>
+                <button class="button" type='submit' name='action' value="button3">See on a map</button>
             </div>
         </form>
     </div>
     <div>
-        <img class="profile" onclick="window.location.href='V_profile.html'"
-            src="{{ url_for('static', filename='assets/tranperent_person.png') }}">
+        <img class="profile" onclick="window.location.href='/profile'"
+            src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
 </body>
 
