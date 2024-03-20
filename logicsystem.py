@@ -2,6 +2,7 @@
 logic system for our customers
 """
 import pymongo
+import json
 from flask import Flask, render_template, request, flash, redirect, url_for, session, jsonify
 import googlemaps
 import requests
@@ -122,11 +123,11 @@ def create_account():
         licensee = request.form['license']
 
         if not val.validate_name(name):
-            flash('You failed name(fisrt symb- upper)')
+            flash('You failed name(first symb- upper)')
             return render_template('O_sign-up.html')
 
         if not val.validate_surname(surname):
-            flash('You failed surname(fisrt sym- upper)')
+            flash('You failed surname(first sym- upper)')
             return render_template('O_sign-up.html')
 
         if not val.validate_email(email):
@@ -142,7 +143,7 @@ def create_account():
             return render_template('O_sign-up.html')
 
         dct = {'name': name, 'surname': surname, 'email':email,
-            'password': password, 'oreder_id': None}
+            'password': password, 'order_id': None}
 
         if car and licensee:
             dct['car'] = car
@@ -161,12 +162,13 @@ def create_account():
 @app.route('/choose_way', methods = ['POST', 'GET'])
 def choose_way():
     """
-    delets person from app
+    deletes person from app
     """
 
     city_list = []
 
     if request.method == 'POST':
+
         action = request.form['action']
         startt = request.form['start']
         end = request.form['end']
@@ -253,7 +255,7 @@ def profile():
 
     return render_template('V_profile.html')
 
-@app.route('/delete_acccount', methods = ['POST', 'GET'])
+@app.route('/delete_account', methods = ['POST', 'GET'])
 def delete():
     '''
     deletes an account
@@ -313,78 +315,87 @@ def change_info():
     # logic_sys.get_database.update_one(person, {"$pull": change_data})
     return render_template('V_change_info.html', name_surname = name_surname)
 
-
 @app.route('/driver_page', methods=['POST', 'GET'])
 def orders():
     """
     shows all orders for drivers
     """
+
+    if request.method == 'POST':
+        m_json = request.form['button']
+        session['order_info'] = json.loads(m_json)
+        return redirect(url_for('driver_map'))
+
     order_list = []
 
     all_orders = list(logic_sys.trips_database.find({}))
 
     for i in all_orders:
-        if len(order_list) != 3 and i['status'] == 'created':
+        if len(order_list) != 3 and i['status'] == 'created' and not i['driver']:
+            i['_id'] = str(i['_id'])
+            i['user_id'] = str(i['user_id'])
             order_list.append(i)
         elif len(order_list) == 3:
             break
 
-    # if request.method == 'POST':
-    #     action = request.form.get('action')
-    #     order = request.form.get('orderId')
-    #     order = str_to_dict(order)
-
-    #     if action == 'button1':
-    #         logic_sys.trips_database.update_one(
-    #             order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
-    #         return redirect(url_for('in_way_proccess'))
-
-    #     if action == 'button2':
-    #         city_list = order['waypoints_list']
-    #         return render_template('M_driver.html', order_list = order_list, city_list = city_list)
-
     return render_template('M_driver.html', order_list = order_list)
 
+@app.route('/driver_map', methods=['POST', 'GET'])
+def driver_map():
+    """
+    driver map
+    """
+    city_list = session['order_info']['waypoints_list']
+    if request.method == 'POST':
+
+        action = request.form['action']
+
+        if action == 'button1':
+            session['order_info'] = None
+            return redirect(url_for('orders'))
+
+        if action == 'button2':
+            return redirect(url_for('in_way_process'))
+
+    return render_template('V_driver_map.html', city_list = city_list)
+
 @app.route('/in_way', methods=['POST', 'GET'])
-def in_way_proccess():
+def in_way_process():
     """
     represents driver in a way
     """
-
-    lst_ways = []
 
     if request.method == 'POST':
 
         action = request.form['action']
 
         if action == 'button1':
-            logic_sys.trips_database.delete_one(session['order_id'])
+            print(session['order_info'])
+            logic_sys.trips_database.update_one(
+                {"_id": ObjectId(session['order_info']['_id'])}, {"$set": {'status': 'completed'}}
+                )
+
+            session['order_info'] = None
             return redirect(url_for('orders'))
 
         if action == 'button2':
-            logic_sys.trips_database.delete_one(session['order_id'])
-            session['order_id']['in_proccess'] = False
-            logic_sys.add_order(session['order_id'])
+            logic_sys.trips_database.update_one(
+                ObjectId(session['order_info']['_id']), {"$set": {'status': 'declined'}}
+                )
+
+            session['order_info'] = None
             return redirect(url_for('orders'))
 
         if action == 'button3':
-            lst_ways = [session['order_id']['start'], session['order_id']['end']]\
-             + session['order_id']['waypoints']
-            return render_template('O_main.html', lst_ways = lst_ways)
+            city_list = session['order_info']['waypoints_list']
+            return render_template('O_main.html', city_list = city_list)
 
-    return render_template('O_main.html', lst_ways = lst_ways)
-
-@app.route('/driver_map')
-def driver_map():
-    """
-    driver map
-    """
-    return render_template('V_driver_map.html', city_list = [])
+    return render_template('O_main.html', city_list = [])
 
 @app.errorhandler(404)
 def page_not_found(error):
     """
-    page is not found erroe
+    page is not found error
     """
     return render_template('V_not_found.html')
 
@@ -402,7 +413,7 @@ class Map:
 
     def take_map_data(self):
         """
-        creates the best way beetween multiple places
+        creates the best way between multiple places
         """
         lst_places = [self.startt, self.end] + self.other_places
 

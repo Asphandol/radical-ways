@@ -14,16 +14,12 @@
         <div id="map" class="map"></div>
         <form action='/driver_map' method="post">
             <div class="buttons">
-                <button id="acceptButton" type='submit' name="action" value="button1" class="button">Accept the
-                    order</button>
-                <button onclick="window.location.href='/driver_page'" name="action" class="button">Back
-                    to orders</button>
+                <button type = 'submit' name="action" value="button1" class="button">Back to orders</button>
+                <button type = 'submit' name="action" value="button2" class="button">Accept the order</button>
             </div>
         </form>
     </div>
 </body>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
 
 <script>
     function initMap() {
@@ -52,3 +48,6 @@
     }
 }
 </script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
