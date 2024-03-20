@@ -94,7 +94,9 @@ def logg_in():
             flash('There are no such data')
             return render_template('O_log-in.html')
 
-        session['my_id'] = str(logic_sys.log_in({'email': email, 'password': password})['_id'])
+        user_info = logic_sys.log_in({'email': email, 'password': password})
+        session['my_id'] = str(user_info['_id'])
+        session['order_id'] = str(user_info['order_id']) if user_info['order_id'] else None
 
         if 'car' in logic_sys.log_in({'email': email, 'password': password}):
 
@@ -140,7 +142,7 @@ def create_account():
             return render_template('O_sign-up.html')
 
         dct = {'name': name, 'surname': surname, 'email':email,
-            'password': password}
+            'password': password, 'oreder_id': None}
 
         if car and licensee:
             dct['car'] = car
@@ -148,6 +150,7 @@ def create_account():
 
         logic_sys.sign_up(dct)
         session['my_id'] = str(logic_sys.log_in({'email': email, 'password': password})['_id'])
+        session['order_id'] = None
 
         if 'car' in dct:
             return redirect(url_for('orders'))
@@ -205,6 +208,7 @@ def choose_way():
         if action == 'button2':
             logic_sys.trips_database.insert_one(dct_info)
             trip_id = logic_sys.trips_database.find_one(dct_info)
+            session['order_id'] = str(trip_id['_id'])
             while True:
                 time.sleep(2)
                 try:
@@ -309,11 +313,6 @@ def change_info():
     # logic_sys.get_database.update_one(person, {"$pull": change_data})
     return render_template('V_change_info.html', name_surname = name_surname)
 
-def str_to_dict(string: str) -> dict:
-    """
-    str to dictionary
-    """
-    return eval(string)
 
 @app.route('/driver_page', methods=['POST', 'GET'])
 def orders():
@@ -330,21 +329,21 @@ def orders():
         elif len(order_list) == 3:
             break
 
-    if request.method == 'POST':
-        action = request.form.get('action')
-        order = request.form.get('orderId')
-        order = str_to_dict(order)
+    # if request.method == 'POST':
+    #     action = request.form.get('action')
+    #     order = request.form.get('orderId')
+    #     order = str_to_dict(order)
 
-        if action == 'button1':
-            logic_sys.trips_database.update_one(
-                order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
-            return redirect(url_for('in_way_proccess'))
+    #     if action == 'button1':
+    #         logic_sys.trips_database.update_one(
+    #             order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
+    #         return redirect(url_for('in_way_proccess'))
 
-        if action == 'button2':
-            city_list = order['waypoints_list']
-            return render_template('M_driver.html', order_list = order_list, city_list = city_list)
+    #     if action == 'button2':
+    #         city_list = order['waypoints_list']
+    #         return render_template('M_driver.html', order_list = order_list, city_list = city_list)
 
-    return render_template('M_driver.html', order_list = order_list, city_list = [])
+    return render_template('M_driver.html', order_list = order_list)
 
 @app.route('/in_way', methods=['POST', 'GET'])
 def in_way_proccess():
