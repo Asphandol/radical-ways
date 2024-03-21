@@ -11,9 +11,11 @@ from bson import ObjectId
 from PIL import Image
 import time
 from validator import Validator
+import bcrypt
 
 app = Flask(__name__)
 
+SALT = bcrypt.gensalt()
 API_KEY = "AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA"
 gmaps = googlemaps.Client(key=API_KEY)
 
@@ -96,16 +98,16 @@ def logg_in():
             flash("You need to input password")
             return render_template("O_log-in.html")
 
-        if not bool(logic_sys.log_in({"email": email, "password": password})):
+        if not bool(logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)})):
             flash("There are no such data")
             return render_template("O_log-in.html")
 
-        user_info = logic_sys.log_in({"email": email, "password": password})
+        user_info = logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)})
         session["my_id"] = str(user_info["_id"])
         session["order_id"] = str(user_info["order_id"]) if user_info["order_id"] else None
 
 
-        if "car" in logic_sys.log_in({"email": email, "password": password}):
+        if "car" in logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)}):
 
             return redirect(url_for("orders"))
 
@@ -152,7 +154,7 @@ def create_account():
             "name": name,
             "surname": surname,
             "email": email,
-            "password": password,
+            "password": bcrypt.hashpw(password.encode('utf-8'), SALT),
             "order_id": None,
         }
 
@@ -162,7 +164,7 @@ def create_account():
 
         logic_sys.sign_up(dct)
         session["my_id"] = str(
-            logic_sys.log_in({"email": email, "password": password})["_id"]
+            logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)})["_id"]
         )
         session["order_id"] = None
 
@@ -291,7 +293,7 @@ def delete():
     deletes an account
     """
     if request.method == "POST":
-        password = request.form["password"]
+        password = bcrypt.hashpw(request.form["password"].encode('utf-8'), SALT)
         real_password = logic_sys.get_database.find_one(
             {"_id": ObjectId(session["my_id"])}
         )["password"]
