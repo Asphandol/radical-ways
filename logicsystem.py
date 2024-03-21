@@ -102,9 +102,8 @@ def logg_in():
 
         user_info = logic_sys.log_in({"email": email, "password": password})
         session["my_id"] = str(user_info["_id"])
-        session["order_id"] = (
-            str(user_info["order_id"]) if user_info["order_id"] else None
-        )
+        session["order_id"] = str(user_info["order_id"]) if user_info["order_id"] else None
+
 
         if "car" in logic_sys.log_in({"email": email, "password": password}):
 
@@ -298,7 +297,7 @@ def delete():
         )["password"]
 
         if real_password == password:
-            logic_sys.get_database.delete_one({"password": password})
+            logic_sys.get_database.delete_one({"_id": ObjectId(session["my_id"])})
             session["my_id"] = None
             return redirect(url_for("start"))
 
@@ -368,6 +367,7 @@ def orders():
         if len(order_list) != 3 and i['status'] == 'created' and not i['driver']:
             i['_id'] = str(i['_id'])
             i['user_id'] = str(i['user_id'])
+            i['naming'] = " - ".join(i['waypoints_list'])
             order_list.append(i)
         elif len(order_list) == 3:
             break
@@ -392,6 +392,10 @@ def driver_map():
         if action == 'button2':
             logic_sys.trips_database.update_one({'_id': ObjectId(session['order_info']['_id'])},
                                                 {"$set": {'driver': ObjectId(session['my_id'])}})
+            logic_sys.get_database.update_one(
+                {"_id": ObjectId(session['my_id'])},
+                {"$set": {'order_id': ObjectId(session['order_info']['_id'])}}
+                )
             return redirect(url_for('in_way_process'))
 
     return render_template('V_driver_map.html', city_list = city_list)
@@ -406,18 +410,27 @@ def in_way_process():
         action = request.form["action"]
 
         if action == 'button1':
-            print(session['order_info'])
             logic_sys.trips_database.update_one(
                 {"_id": ObjectId(session['order_info']['_id'])}, {"$set": {'status': 'completed'}}
                 )
+
+            logic_sys.get_database.update_one(
+            {"_id": ObjectId(session['my_id'])},
+            {"$set": {'order_id': None}}
+            )
 
             session['order_info'] = None
             return redirect(url_for('orders'))
 
         if action == 'button2':
             logic_sys.trips_database.update_one(
-                ObjectId(session['order_info']['_id']), {"$set": {'status': 'declined'}}
+                {"_id": ObjectId(session['order_info']['_id'])}, {"$set": {'status': 'declined'}}
                 )
+
+            logic_sys.get_database.update_one(
+            {"_id": ObjectId(session['my_id'])},
+            {"$set": {'order_id': None}}
+            )
 
             session['order_info'] = None
             return redirect(url_for('orders'))
@@ -434,7 +447,6 @@ def page_not_found(error):
     page is not found error
     """
     return render_template("V_not_found.html")
-
 
 class Map:
     """
