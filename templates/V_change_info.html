@@ -18,19 +18,25 @@
         <div class="profile-container">
             <div>Current Name: <span id="old-name">{{ name_surname }}</span></div>
             {% if get_flashed_messages() %}
-                <div class="flash">
-                    {% for msg in get_flashed_messages() %}
-                    <div>{{msg}}</div>
-                    {% endfor %}
-                </div>
+            <div class="flash">
+                {% for msg in get_flashed_messages() %}
+                <div>{{msg}}</div>
+                {% endfor %}
+            </div>
             {% endif %}
-            <form action='/change_info' method='post'>
-                <input type="text" class="input-field" placeholder="New First Name" name = 'name'>
-                <input type="text" class="input-field" placeholder="New Last Name" name = 'surname'>
+            <form action='/change_info' name='action' value='change-name' method='post'>
+                <input type="text" class="input-field" placeholder="New First Name" name='name'>
+                <input type="text" class="input-field" placeholder="New Last Name" name='surname'>
                 <button class="button" type='submit'>Accept</button>
             </form>
             <img src="{{ url_for('static', filename='assets/stepan.jpg')}}" alt="Old Profile Photo"
                 class="profile-photo">
+            <form action='/change_info' name='action' value='change-picture' method='post'
+                enctype='multipart/form-data'>
+                {{form.hidden_tag()}}
+                {{form.file()}}
+                {{form.submit()}}
+            </form>
             <button class="button">Change Photo</button>
             <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
         </div>
