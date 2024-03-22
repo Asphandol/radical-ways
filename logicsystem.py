@@ -3,30 +3,23 @@ logic system for our customers
 """
 
 import pymongo
-from flask import (
-    Flask,
-    render_template,
-    request,
-    flash,
-    redirect,
-    url_for,
-    session,
-    jsonify,
-)
+import json
+from flask import Flask, render_template, request, flash, redirect, url_for, session, jsonify
 import googlemaps
 import requests
 from bson import ObjectId
 from PIL import Image
 import time
 from validator import Validator
+import bcrypt
 
 app = Flask(__name__)
 
+SALT = bcrypt.gensalt()
 API_KEY = "AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA"
 gmaps = googlemaps.Client(key=API_KEY)
 
 app.secret_key = "mega_secret_key"
-
 
 class LogicSystem:
     """
@@ -73,11 +66,9 @@ class LogicSystem:
         """
         self.trips_database.insert_one(waypooints_lst)
 
-
 logic_sys = LogicSystem()
 
 val = Validator()
-
 
 @app.route("/")
 def start():
@@ -85,7 +76,6 @@ def start():
     starting page
     """
     return render_template("O_start-page.html")
-
 
 @app.route("/log_in", methods=["POST", "GET"])
 def logg_in():
@@ -108,24 +98,22 @@ def logg_in():
             flash("You need to input password")
             return render_template("O_log-in.html")
 
-        if not bool(logic_sys.log_in({"email": email, "password": password})):
+        if not bool(logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)})):
             flash("There are no such data")
             return render_template("O_log-in.html")
 
-        user_info = logic_sys.log_in({"email": email, "password": password})
+        user_info = logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)})
         session["my_id"] = str(user_info["_id"])
-        session["order_id"] = (
-            str(user_info["order_id"]) if user_info["order_id"] else None
-        )
+        session["order_id"] = str(user_info["order_id"]) if user_info["order_id"] else None
 
-        if "car" in logic_sys.log_in({"email": email, "password": password}):
+
+        if "car" in logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)}):
 
             return redirect(url_for("orders"))
 
         return redirect(url_for("choose_way"))
 
     return render_template("O_log-in.html")
-
 
 @app.route("/sign_up", methods=["POST", "GET"])
 def create_account():
@@ -143,12 +131,12 @@ def create_account():
         licensee = request.form["license"]
 
         if not val.validate_name(name):
-            flash("You failed name(fisrt symb- upper)")
-            return render_template("O_sign-up.html")
+            flash('You failed name(first symb- upper)')
+            return render_template('O_sign-up.html')
 
         if not val.validate_surname(surname):
-            flash("You failed surname(fisrt sym- upper)")
-            return render_template("O_sign-up.html")
+            flash('You failed surname(first sym- upper)')
+            return render_template('O_sign-up.html')
 
         if not val.validate_email(email):
             flash("You failed email(example: aaa@uuu.com)")
@@ -166,7 +154,7 @@ def create_account():
             "name": name,
             "surname": surname,
             "email": email,
-            "password": password,
+            "password": bcrypt.hashpw(password.encode('utf-8'), SALT),
             "order_id": None,
         }
 
@@ -176,7 +164,7 @@ def create_account():
 
         logic_sys.sign_up(dct)
         session["my_id"] = str(
-            logic_sys.log_in({"email": email, "password": password})["_id"]
+            logic_sys.log_in({"email": email, "password": bcrypt.hashpw(password.encode('utf-8'), SALT)})["_id"]
         )
         session["order_id"] = None
 
@@ -186,11 +174,10 @@ def create_account():
 
     return render_template("O_sign-up.html")
 
-
 @app.route("/choose_way", methods=["POST", "GET"])
 def choose_way():
     """
-    delets person from app
+    deletes person from app
     """
 
     city_list = []
@@ -200,7 +187,7 @@ def choose_way():
         startt = request.form["start"]
         end = request.form["end"]
 
-        if len(request.form["waypoints"]) != 1:
+        if len(request.form["waypoints"]) not in range(0, 2):
             waypoints = request.form["waypoints"].split(", ")
             waypoints.remove(end)
             waypoints.remove(startt)
@@ -238,15 +225,17 @@ def choose_way():
             logic_sys.trips_database.insert_one(dct_info)
             trip_id = logic_sys.trips_database.find_one(dct_info)
             session["order_id"] = str(trip_id["_id"])
+
             while True:
                 time.sleep(2)
                 try:
                     logic_sys.trips_database.find_one(trip_id)["status"]
                 except TypeError:
+                    trip_info = logic_sys.trips_database.find_one(trip_id)
+                    session['trip_info'] = trip_info
                     return redirect(url_for("your_driver"))
 
     return render_template("M_user.html", city_list=[])
-
 
 @app.route("/your_driver", methods=["POST", "GET"])
 def your_driver():
@@ -254,15 +243,23 @@ def your_driver():
     renders your driver page
     """
     city_list = []
+    driver_info = logic_sys.get_database.find_one(session['trip_info']['driver'])
+    car_type = driver_info['car']
+    car_license = driver_info['license']
     if request.form == "POST":
         city_list = logic_sys.trips_database.find_one(
             {"user_id": ObjectId(session["my_id"])}
         )["waypoints_list"]
 
-        return render_template("Y_your_driver.html", city_list=city_list)
+        return render_template("Y_your_driver.html",
+                            city_list=city_list,
+                            car_type = car_type,
+                            car_license = car_license)
 
-    return render_template("Y_your_driver.html", city_list=city_list)
-
+    return render_template("Y_your_driver.html",
+                           city_list=city_list,
+                           car_type = car_type,
+                           car_license = car_license)
 
 @app.route("/profile", methods=["POST", "GET"])
 def profile():
@@ -290,20 +287,19 @@ def profile():
 
     return render_template("V_profile.html")
 
-
-@app.route("/delete_acccount", methods=["POST", "GET"])
+@app.route('/delete_account', methods = ['POST', 'GET'])
 def delete():
     """
     deletes an account
     """
     if request.method == "POST":
-        password = request.form["password"]
+        password = bcrypt.hashpw(request.form["password"].encode('utf-8'), SALT)
         real_password = logic_sys.get_database.find_one(
             {"_id": ObjectId(session["my_id"])}
         )["password"]
 
         if real_password == password:
-            logic_sys.get_database.delete_one({"password": password})
+            logic_sys.get_database.delete_one({"_id": ObjectId(session["my_id"])})
             session["my_id"] = None
             return redirect(url_for("start"))
 
@@ -312,14 +308,12 @@ def delete():
 
     return render_template("V_delete_account.html")
 
-
 @app.route("/main")
 def main():
     """
     main page
     """
     return render_template("O_main.html")
-
 
 @app.route("/get_help", methods=["POST", "GET"])
 def get_help():
@@ -329,7 +323,6 @@ def get_help():
     if request.method == "POST":
         return redirect(url_for("profile"))
     return render_template("V_get_help.html")
-
 
 @app.route("/change_info", methods=["POST", "GET"])
 def change_info():
@@ -347,7 +340,7 @@ def change_info():
             logic_sys.get_database.update_one(
                 info, {"$set": {"name": name, "surname": surname}}
             )
-            name_surname = info["name"] + " " + info["surname"]
+            name_surname = name + " " + surname
             return render_template("V_change_info.html", name_surname=name_surname)
 
         flash("invalid input name surname")
@@ -357,86 +350,105 @@ def change_info():
     # logic_sys.get_database.update_one(person, {"$pull": change_data})
     return render_template("V_change_info.html", name_surname=name_surname)
 
-
 @app.route("/driver_page", methods=["POST", "GET"])
 def orders():
     """
     shows all orders for drivers
     """
+
+    if request.method == 'POST':
+        m_json = request.form['button']
+        session['order_info'] = json.loads(m_json)
+        return redirect(url_for('driver_map'))
+
     order_list = []
 
     all_orders = list(logic_sys.trips_database.find({}))
 
     for i in all_orders:
-        if len(order_list) != 3 and i["status"] == "created":
+        if len(order_list) != 3 and i['status'] == 'created' and not i['driver']:
+            i['_id'] = str(i['_id'])
+            i['user_id'] = str(i['user_id'])
+            i['naming'] = " - ".join(i['waypoints_list'])
             order_list.append(i)
         elif len(order_list) == 3:
             break
 
-    # if request.method == 'POST':
-    #     action = request.form.get('action')
-    #     order = request.form.get('orderId')
-    #     order = str_to_dict(order)
+    return render_template('M_driver.html', order_list = order_list)
 
-    #     if action == 'button1':
-    #         logic_sys.trips_database.update_one(
-    #             order, {'$set': {'status': 'taken', 'driver': session['my_id']}})
-    #         return redirect(url_for('in_way_proccess'))
-
-    #     if action == 'button2':
-    #         city_list = order['waypoints_list']
-    #         return render_template('M_driver.html', order_list = order_list, city_list = city_list)
-
-    return render_template("M_driver.html", order_list=order_list)
-
-
-@app.route("/in_way", methods=["POST", "GET"])
-def in_way_proccess():
-    """
-    represents driver in a way
-    """
-
-    lst_ways = []
-
-    if request.method == "POST":
-
-        action = request.form["action"]
-
-        if action == "button1":
-            logic_sys.trips_database.delete_one(session["order_id"])
-            return redirect(url_for("orders"))
-
-        if action == "button2":
-            logic_sys.trips_database.delete_one(session["order_id"])
-            session["order_id"]["in_proccess"] = False
-            logic_sys.add_order(session["order_id"])
-            return redirect(url_for("orders"))
-
-        if action == "button3":
-            lst_ways = [
-                session["order_id"]["start"],
-                session["order_id"]["end"],
-            ] + session["order_id"]["waypoints"]
-            return render_template("O_main.html", lst_ways=lst_ways)
-
-    return render_template("O_main.html", lst_ways=lst_ways)
-
-
-@app.route("/driver_map")
+@app.route("/driver_map", methods=['POST', 'GET'])
 def driver_map():
     """
     driver map
     """
-    return render_template("V_driver_map.html", city_list=[])
+    city_list = session['order_info']['waypoints_list']
 
+    if request.method == "POST":
+
+        action = request.form['action']
+
+        if action == 'button1':
+            session['order_info'] = None
+            return redirect(url_for('orders'))
+
+        if action == 'button2':
+            logic_sys.trips_database.update_one({'_id': ObjectId(session['order_info']['_id'])},
+                                                {"$set": {'driver': ObjectId(session['my_id'])}})
+            logic_sys.get_database.update_one(
+                {"_id": ObjectId(session['my_id'])},
+                {"$set": {'order_id': ObjectId(session['order_info']['_id'])}}
+                )
+            return redirect(url_for('in_way_process'))
+
+    return render_template('V_driver_map.html', city_list = city_list)
+
+@app.route('/in_way', methods=['POST', 'GET'])
+def in_way_process():
+    """
+    represents driver in a way
+    """
+    if request.method == 'POST':
+
+        action = request.form["action"]
+
+        if action == 'button1':
+            logic_sys.trips_database.update_one(
+                {"_id": ObjectId(session['order_info']['_id'])}, {"$set": {'status': 'completed'}}
+                )
+
+            logic_sys.get_database.update_one(
+            {"_id": ObjectId(session['my_id'])},
+            {"$set": {'order_id': None}}
+            )
+
+            session['order_info'] = None
+            return redirect(url_for('orders'))
+
+        if action == 'button2':
+            logic_sys.trips_database.update_one(
+                {"_id": ObjectId(session['order_info']['_id'])}, {"$set": {'status': 'declined'}}
+                )
+
+            logic_sys.get_database.update_one(
+            {"_id": ObjectId(session['my_id'])},
+            {"$set": {'order_id': None}}
+            )
+
+            session['order_info'] = None
+            return redirect(url_for('orders'))
+
+        if action == 'button3':
+            city_list = session['order_info']['waypoints_list']
+            return render_template('O_main.html', city_list = city_list)
+
+    return render_template('O_main.html', city_list = [])
 
 @app.errorhandler(404)
 def page_not_found(error):
     """
-    page is not found erroe
+    page is not found error
     """
     return render_template("V_not_found.html")
-
 
 class Map:
     """
@@ -452,7 +464,7 @@ class Map:
 
     def take_map_data(self):
         """
-        creates the best way beetween multiple places
+        creates the best way between multiple places
         """
         lst_places = [self.startt, self.end] + self.other_places
 

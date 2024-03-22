@@ -14,9 +14,9 @@
 
     <div class="info-container">
         <h2>Car number:</h2>
-        <div class="text_num">XXXXXXXX</div>
+        <div class="text_num">{{ car_license }}</div>
         <h2>Car type:</h2>
-        <div class="text_type">XXXXXXXX</div>
+        <div class="text_type">{{ car_type }}</div>
         <from action='/your_driver' method='post'>
             <button method = 'submit' class="button">See on a map</button>
         </from>
