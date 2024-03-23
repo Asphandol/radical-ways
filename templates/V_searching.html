@@ -15,16 +15,36 @@
     </div>
     <div class="container">
         <h1>Searching for a driver</h1>
-        <from action='/driver_waiting' method='post'>
-            <button method = 'submit' class="button" name = 'action' value = 'button1'>Cancel the trip</button>
-        </from>
+        <form action='/driver_searching' method='post'>
+            <button method = 'submit' class="button" name = 'action' value = 'button'>Cancel the trip</button>
+        </form>
     </div>
     <div>
         <img class="profile" onclick="window.location.href='/profile'"
             src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
 
-    <script src="{{ url_for('static', filename='javascrpt/search.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            function checkTripStatus() {
+                $.ajax({
+                    url: '/check_trip_status',
+                    method: 'GET',
+                    success: function(data) {
+                        if (data.status === 'taken') {
+                        window.location.replace("/your_driver");
+                    }
+                    },
+                    error: function(error) {
+                        console.log("Error occurred:", error);
+                    }
+                });
+            }
+
+            setInterval(checkTripStatus, 5000);
+        });
+    </script>
 
 </body>
 

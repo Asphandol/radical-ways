@@ -17,9 +17,10 @@
         <div class="text_num">{{ car_license }}</div>
         <h2>Car type:</h2>
         <div class="text_type">{{ car_type }}</div>
-        <from action='/your_driver' method='post'>
-            <button method = 'submit' class="button">See on a map</button>
-        </from>
+        <form action='/your_driver' method='post'>
+            <button method = 'submit' class="button" name = "action" value="see_map">See on a map</button>
+            <button method = 'submit' class="button" name = "action" value="reject">Reject</button>
+        </form>
         {% if city_list %}
         <div id="map" style="height: 400px; width: 100%;"></div>
         {% endif %}
@@ -28,7 +29,7 @@
     <div class="driver-container">
         <h1 style="color: #fff;">Say Hello!</h1>
         <div><img class="driver-photo" src="{{ url_for('static', filename='assets/white_person.png') }}"></div>
-        <div class="name-of-driver">Driver Name</div>
+        <div class="name-of-driver">{{ name_surname }}</div>
     </div>
 
     <div>
@@ -37,40 +38,61 @@
     </div>
 </body>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 8
-        });
-
-        var city_list = {{ city_list | tojson }};
-
-        for (var i = 0; i < city_list.length - 1; i++) {
-            var directionsService = new google.maps.DirectionsService();
-            var request = {
-                origin: city_list[i],
-                destination: city_list[i+1],
-                travelMode: 'DRIVING'
-            };
-            directionsService.route(request, function(response, status) {
-                if (status == 'OK') {
-                    var directionsDisplay = new google.maps.DirectionsRenderer();
-                    directionsDisplay.setMap(map);
-                    directionsDisplay.setDirections(response);
+    $(document).ready(function(){
+        function checkTripStatus() {
+            $.ajax({
+                url: '/during_trip_status',
+                method: 'GET',
+                success: function(data) {
+                    if (data.status === 'completed') {
+                            window.location.replace("/finish");
+                    }
+                    if (data.status === 'declined') {
+                        window.location.replace("/rejected");
+                    }
+                },
+                error: function(error) {
+                    console.log("Error occurred:", error);
                 }
             });
         }
-    }
 
-    function initMapOnLoad() {
-        initMap();
-    }
-    window.addEventListener('load', initMapOnLoad);
+        setInterval(checkTripStatus, 5000);
+    });
 </script>
 
+<script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -34.397, lng: 150.644 },
+            zoom: 8
+        });
+
+        var city_list = {{ city_list | tojson
+    }};
+
+    for (var i = 0; i < city_list.length - 1; i++) {
+        var directionsService = new google.maps.DirectionsService();
+        var request = {
+            origin: city_list[i],
+            destination: city_list[i + 1],
+            travelMode: 'DRIVING'
+        };
+        directionsService.route(request, function (response, status) {
+            if (status == 'OK') {
+                var directionsDisplay = new google.maps.DirectionsRenderer();
+                directionsDisplay.setMap(map);
+                directionsDisplay.setDirections(response);
+            }
+        });
+    }
+}
 </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
 
 </html>
