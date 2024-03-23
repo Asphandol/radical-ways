@@ -21,14 +21,14 @@
             </div>
         {% endif %}
         <form id="myForm" action='/choose_way' method='post'>
-            <input class="input-field" type="text" name='start' id="start" placeholder="Початок"><br><br>
-            <input class="input-field" type="text" name='end' id="end" placeholder="Кінець"><br><br>
-            <input class="input-field" type="text" id="waypoint" placeholder="Проміжні точки"><br><br>
+            <input class="input-field" type="text" name='start' id="start" placeholder="Start"><br><br>
+            <input class="input-field" type="text" name='end' id="end" placeholder="Find"><br><br>
+            <input class="input-field" type="text" id="waypoint" placeholder="Additional waypoints"><br><br>
             <div class="output-field" id="formattedWaypoints">&nbsp;</div>
             <input type="hidden" name="waypoints" id="waypointsInput">
             <div class="buttons">
                 <button onclick="submitForm()" name = 'action' class="button" value="button1">View on a map</button>
-                <button onclick="findDriver()" name = 'action' class="button" value="button2" id="findDriverBtn">Find a driver</button>
+                <button onclick="findDriver(); " name = 'action' class="button" value="button2" id="findDriverBtn">Find a driver</button>
             </div>
         </form>
     </div>

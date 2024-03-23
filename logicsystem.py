@@ -10,12 +10,12 @@ import requests
 from bson import ObjectId
 from PIL import Image
 import time
-from validator import Validator
 import bcrypt
+from validator import Validator
 
 app = Flask(__name__)
 
-SALT = bcrypt.gensalt()
+SALT = b'$2b$12$EsG5I8AItM53u0bu4YqhrO'
 API_KEY = "AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA"
 gmaps = googlemaps.Client(key=API_KEY)
 
@@ -32,7 +32,7 @@ class LogicSystem:
         gives an account database
         """
         client = pymongo.MongoClient(
-            "mongodb+srv://melnykpn:Mascara_2006@radicalways.gbpcvjs.mongodb.net/?retryWrites=true&w=majority&appName=Radicalways"
+            "mongodb+srv://Oleg:Oleg@radicalways.gbpcvjs.mongodb.net/?retryWrites=true&w=majority&appName=Radicalways"
         )
         db = client["Radical_ways"]
         return db["accounts"]
@@ -69,6 +69,20 @@ class LogicSystem:
 logic_sys = LogicSystem()
 
 val = Validator()
+
+def check_city_existence(city_name):
+    """
+    checks if city exists
+    """
+    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={city_name}&key={API_KEY}'
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        if data['status'] == 'OK':
+            return True
+    return False 
 
 @app.route("/")
 def start():
@@ -183,67 +197,65 @@ def choose_way():
     city_list = []
 
     if request.method == "POST":
+
         action = request.form["action"]
-        startt = request.form["start"]
+        start1 = request.form["start"]
         end = request.form["end"]
+        waypoints = request.form["waypoints"].split(", ")
 
-        if len(request.form["waypoints"]) not in range(0, 2):
-            waypoints = request.form["waypoints"].split(", ")
-            waypoints.remove(end)
-            waypoints.remove(startt)
-        else:
-            waypoints = []
+        if not check_city_existence(start1):
+            flash('There is no such start place')
+            return render_template("M_user.html", city_list = [])
 
-        try:
-            if not waypoints:
-                mapa = Map(startt, end, waypoints)
-                city_list = mapa.take_map_data()
-            else:
-                city_list = [startt, end]
-        except:
-            city_list = None
-            flash("not enough data")
-            return render_template("M_user.html", city_list=city_list)
+        if not check_city_existence(end):
+            flash('There is no such end place')
+            return render_template("M_user.html", city_list = [])
 
-        try:
-            if action == "button1":
-                return render_template("M_user.html", city_list=city_list)
+        for place in waypoints:
+            if not check_city_existence(place):
+                waypoints.remove(place)
 
-        except:
-            city_list = None
-            flash("not enough data")
-            return render_template("M_user.html", city_list=city_list)
+        map1 = Map(start1, end, waypoints)
+        city_list = map1.take_map_data()
 
-        dct_info = {
+        if action == "button1":
+            return render_template("M_user.html", city_list = city_list)
+
+        if action == "button2":
+
+            order_info = {
             "user_id": ObjectId(session["my_id"]),
             "waypoints_list": city_list,
             "status": "created",
             "driver": None,
-        }
+            }
 
-        if action == "button2":
-            logic_sys.trips_database.insert_one(dct_info)
-            trip_id = logic_sys.trips_database.find_one(dct_info)
-            session["order_id"] = str(trip_id["_id"])
-
-            while True:
-                time.sleep(2)
-                try:
-                    logic_sys.trips_database.find_one(trip_id)["status"]
-                except TypeError:
-                    trip_info = logic_sys.trips_database.find_one(trip_id)
-                    session['trip_info'] = trip_info
-                    return redirect(url_for("your_driver"))
+            logic_sys.trips_database.insert_one(order_info)
+            session["order_id"] = str(logic_sys.trips_database.find_one(order_info)['_id'])
+            return redirect(url_for('searching'))
 
     return render_template("M_user.html", city_list=[])
+
+@app.route("/driver_searching", methods = ["POST", "GET"])
+def searching():
+    """
+    searches for the driver
+    """
+    if request.method == "POST":
+        trip_id = ObjectId(session["order_id"])
+        trip_info = logic_sys.trips_database.find_one(trip_id)
+        if trip_info["status"] == "taken":
+            session["driver_id"] = str(trip_info["driver"])
+            return redirect(url_for("your_driver"))
+
+    return render_template("V_searching.html")
 
 @app.route("/your_driver", methods=["POST", "GET"])
 def your_driver():
     """
     renders your driver page
     """
-    city_list = []
-    driver_info = logic_sys.get_database.find_one(session['trip_info']['driver'])
+    driver_info = logic_sys.get_database.find_one(ObjectId(session["driver_id"]))
     car_type = driver_info['car']
     car_license = driver_info['license']
     if request.form == "POST":
@@ -252,14 +264,14 @@ def your_driver():
         )["waypoints_list"]
 
         return render_template("Y_your_driver.html",
-                            city_list=city_list,
+                            city_list = city_list,
                             car_type = car_type,
                             car_license = car_license)
 
     return render_template("Y_your_driver.html",
                            city_list=city_list,
                            car_type = car_type,
-                           car_license = car_license)
+                           car_license = [])
 
 @app.route("/profile", methods=["POST", "GET"])
 def profile():
@@ -392,13 +404,17 @@ def driver_map():
             return redirect(url_for('orders'))
 
         if action == 'button2':
-            logic_sys.trips_database.update_one({'_id': ObjectId(session['order_info']['_id'])},
-                                                {"$set": {'driver': ObjectId(session['my_id'])}})
-            logic_sys.get_database.update_one(
-                {"_id": ObjectId(session['my_id'])},
-                {"$set": {'order_id': ObjectId(session['order_info']['_id'])}}
-                )
-            return redirect(url_for('in_way_process'))
+            if logic_sys.trips_database.find_one(
+            {'_id': ObjectId(session['order_info']['_id'])})['status'] == 'created':
+                logic_sys.trips_database.update_one({'_id': ObjectId(session['order_info']['_id'])},
+                {"$set": {'driver': ObjectId(session['my_id']),
+                    'status': 'taken'}})
+                logic_sys.get_database.update_one(
+                    {"_id": ObjectId(session['my_id'])},
+                    {"$set": {'order_id': ObjectId(session['order_info']['_id'])}}
+                    )
+                return redirect(url_for('in_way_process'))
+            return redirect(url_for('orders'))
 
     return render_template('V_driver_map.html', city_list = city_list)
 
@@ -497,14 +513,18 @@ class Map:
         return distances
 
     @staticmethod
-    def greedy_shortest_path(startt, end, graph, all_points):
+    def greedy_shortest_path(start1, end, graph, all_points):
         """
         makes a shortest path
         """
+
+        if not graph:
+            return [start1, end]
+
         unvisited = set(all_points)
-        path = [startt]
-        current = startt
-        unvisited.remove(startt)
+        path = [start1]
+        current = start1
+        unvisited.remove(start1)
 
         while unvisited:
             next_node = None
