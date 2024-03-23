@@ -14,6 +14,8 @@ from flask import (
     session,
     jsonify,
 )
+import os
+import secrets
 import googlemaps
 import requests
 from bson import ObjectId
@@ -22,14 +24,16 @@ import time
 from validator import Validator
 import bcrypt
 from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField
+from wtforms import FileField, SubmitField, StringField
+from wtforms.validators import DataRequired, Length, Email
+from flask_wtf.file import FileField, FileAllowed
 from werkzeug.utils import secure_filename
 import os
 from wtforms.validators import InputRequired
 
 app = Flask(__name__)
 
-SALT = bcrypt.gensalt()
+SALT = b"$2b$12$EsG5I8AItM53u0bu4YqhrO"
 API_KEY = "AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA"
 gmaps = googlemaps.Client(key=API_KEY)
 
@@ -82,13 +86,13 @@ class LogicSystem:
         self.trips_database.insert_one(waypooints_lst)
 
 
-class UploadFileForm(FlaskForm):
-    """
-    Uploading files
-    """
-
-    file = FileField("File", validators=[InputRequired()])
-    submit = SubmitField("Upload File")
+class UpdateAccountForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired(), Length(min=2, max=20)])
+    surname = StringField("Surname", validators=[DataRequired(), Length(min=2, max=20)])
+    picture = FileField(
+        "Update Profile Picture", validators=[FileAllowed(["jpg", "png"])]
+    )
+    submit = SubmitField("Update")
 
 
 logic_sys = LogicSystem()
@@ -196,6 +200,7 @@ def create_account():
             "email": email,
             "password": bcrypt.hashpw(password.encode("utf-8"), SALT),
             "order_id": None,
+            "picture": "stepan.jpg",
         }
 
         if car and licensee:
@@ -380,45 +385,73 @@ def get_help():
     return render_template("V_get_help.html")
 
 
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, "static/profile_pictures", picture_fn)
+
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+
+    return picture_fn
+
+
 @app.route("/change_info", methods=["POST", "GET"])
 def change_info():
     """
     changes info about person
     """
+    form = UpdateAccountForm()
     info = logic_sys.get_database.find_one({"_id": ObjectId(session["my_id"])})
     name_surname = info["name"] + " " + info["surname"]
-    form = UploadFileForm()
-
-    if request.method == "POST":
-        action = request.form["action"]
-        if action == "change-name":
-            name = request.form["name"]
-            surname = request.form["surname"]
-
-            if val.validate_name(name) and val.validate_surname(surname):
-                logic_sys.get_database.update_one(
-                    info, {"$set": {"name": name, "surname": surname}}
-                )
-                name_surname = name + " " + surname
-                return render_template("V_change_info.html", name_surname=name_surname)
-
-            flash("invalid input name surname")
-            return render_template("V_change_info.html", name_surname=name_surname)
-        # person, change_data
+    image_file = url_for("static", filename="profile_pictures/" + info["picture"])
 
     if form.validate_on_submit():
-        file = form.file.data
-        file.save(
-            os.path.join(
-                os.path.abspath(os.path.dirname(__file__)),
-                "static/profile_pictures",
-                secure_filename(file.filename),
-            )
-        )
-        return "File has been uploaded."
+        if form.picture.data:
+            print("hellos")
+            picture_file = save_picture(form.picture.data)
+            logic_sys.get_database.update_one(info, {"$set": {"picture": picture_file}})
+            image_file = url_for("static", filename="profile_pictures/" + picture_file)
 
-    # logic_sys.get_database.update_one(person, {"$pull": change_data})
-    return render_template("V_change_info.html", name_surname=name_surname, form=form)
+        name = form.name.data
+        surname = form.surname.data
+
+        if val.validate_name(name) and val.validate_surname(surname):
+            logic_sys.get_database.update_one(
+                info, {"$set": {"name": name, "surname": surname}}
+            )
+            name_surname = name + " " + surname
+
+            return render_template(
+                "V_change_info.html",
+                name_surname=name_surname,
+                image_file=image_file,
+                form=form,
+            )
+
+        flash("invalid input name surname")
+        return render_template(
+            "V_change_info.html",
+            name_surname=name_surname,
+            image_file=image_file,
+            form=form,
+        )
+
+    if request.method == "GET":
+        print("ds")
+        form.name.data = info["name"]
+        form.surname.data = info["surname"]
+        form.picture.data = info["picture"]
+
+    return render_template(
+        "V_change_info.html",
+        name_surname=name_surname,
+        image_file=image_file,
+        form=form,
+    )
 
 
 @app.route("/driver_page", methods=["POST", "GET"])
