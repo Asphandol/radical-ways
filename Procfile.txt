@@ -1,1 +1,1 @@
-web: python logicsystem.py
+web: python radical-ways.py
