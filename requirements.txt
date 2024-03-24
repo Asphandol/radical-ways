@@ -1,0 +1,6 @@
+Flask==2.0.1
+pymongo
+googlemaps
+requests
+Pillow
+bcrypt
