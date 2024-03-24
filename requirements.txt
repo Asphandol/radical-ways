@@ -4,3 +4,4 @@ googlemaps
 requests
 Pillow
 bcrypt
+Werkzeug
