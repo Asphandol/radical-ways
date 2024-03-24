@@ -1,1 +1,1 @@
-web: python radical-ways.py
+web: python radical-ways.py $PORT
