@@ -104,7 +104,6 @@ def start():
     """
     return render_template("O_start-page.html")
 
-
 @app.route("/log_in", methods=["POST", "GET"])
 def logg_in():
     """
@@ -408,7 +407,6 @@ def profile():
 
         if action == "b2":
             info = logic_sys.get_database.find_one({"_id": ObjectId(session["my_id"])})
-            print(info)
             cur_order = info["order_id"]
             if "car" in info:
                 if cur_order:
