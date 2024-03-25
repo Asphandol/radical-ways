@@ -12,13 +12,16 @@
     <div class="logo">
         <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
+    {% if city_list %}
+        <div id="map" style="height: 400px; width: 100%;"></div>
+    {% endif %}
     <div class="order-container">
         <h1>Info about route</h1>
         <form action='/in_way' method='post'>
             <div class="buttons">
-                <button class="button" type='submit' name='action' value="button1">Finish order</button>
                 <button class="button" type='submit' name='action' value="button2">Reject</button>
                 <button class="button" type='submit' name='action' value="button3">See on a map</button>
+                <button class="button" type='submit' name='action' value="button1">Finish order</button>
             </div>
         </form>
     </div>
@@ -26,6 +29,29 @@
         <img class="profile" onclick="window.location.href='/profile'"
             src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            function checkTripStatus() {
+                $.ajax({
+                    url: '/driver_dynamic_status',
+                    method: 'GET',
+                    success: function(data) {
+                        if (data.status === 'declined') {
+                            window.location.replace("/rejected");
+                        }
+                    },
+                    error: function(error) {
+                        console.log("Error occurred:", error);
+                    }
+                });
+            }
+
+            setInterval(checkTripStatus, 5000);
+        });
+    </script>
 
     <script>
         function initMap() {
