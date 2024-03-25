@@ -15,10 +15,10 @@
     </div>
     <div class="container">
         {% for order in order_list %}
-            <button> {{order['naming']}} </button>
+        <a style="font-weight: bold;"> {{order['naming']}} </a>
         {% endfor %}
+        <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
     </div>
-    <a href="/profile"> Return to account </a>
 </body>
 
 </html>

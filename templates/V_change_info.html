@@ -15,71 +15,20 @@
     </div>
     <div class="change-info-container">
         <h2>Change Info</h2>
-        <div class="profile-container">
-            {% if get_flashed_messages() %}
-            <div class="flash">
-                {% for msg in get_flashed_messages() %}
-                <div>{{msg}}</div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            <!-- <form action='/change_info' name='action' value='change-name' method='post'>
-                <input type="text" class="input-field" placeholder="New First Name" name='name'>
-                <input type="text" class="input-field" placeholder="New Last Name" name='surname'>
-                <button class="button" type='submit'>Accept</button>
-            </form> -->
-            <img src="{{ image_file }}" alt="Old Profile Photo" class="profile-photo">
-            <!-- <form action='/change_info' name='action'>
-            </form>
-            <button class="button">Change Photo</button> -->
-            <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
+        {% if get_flashed_messages() %}
+        <div class="flash">
+            {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+            {% endfor %}
         </div>
-        <form method="POST" action="" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Account Info</legend>
-                <div class="form-group">
-                    {{ form.name.label(class="form-control-label") }}
-
-                    {% if form.name.errors %}
-                    {{ form.name(class="input-field") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.name.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.name(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.surname.label(class="form-control-label") }}
-                    {% if form.surname.errors %}
-                    {{ form.surname(class="form-control form-control-lg is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.surname.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.surname(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.picture.label() }}
-                    {{ form.picture(class="form-control-file") }}
-                    {% if form.picture.errors %}
-                    {% for error in form.picture.errors %}
-                    <span class="text-danger">{{ error }}</span></br>
-                    {% endfor %}
-                    {% endif %}
-                </div>
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
+        {% endif %}
+        <div>Current Name: <span id="old-name">{{ name_surname }}</span></div>
+        <form action='/change_info' method='post'>
+            <input type="text" class="input-field" placeholder="New First Name" name='name'>
+            <input type="text" class="input-field" placeholder="New Last Name" name='surname'>
+            <button class="button" type='submit'>Accept</button>
         </form>
-    </div>
+        <button onclick="window.location.href='/profile'" class="button">Return to Profile</button>
     </div>
 </body>
 

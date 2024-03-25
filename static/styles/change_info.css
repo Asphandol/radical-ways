@@ -5,6 +5,7 @@
     border-radius: 10px;
     padding: 20px;
     box-sizing: border-box;
+    text-align: center;
 }
 
 h2 {
@@ -19,16 +20,4 @@ h2 {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
-}
-
-.profile-photo {
-    margin: 20px auto;
-    display: block;
-    max-width: 200px;
-    height: auto;
-    border-radius: 50%;
-}
-
-.profile-container {
-    text-align: center;
 }
