@@ -14,7 +14,11 @@
         <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
     <div class="container">
+        {% for order in order_list %}
+            <button> {{order['naming']}} </button>
+        {% endfor %}
     </div>
+    <a href="/profile"> Return to account </a>
 </body>
 
 </html>

@@ -162,9 +162,10 @@ def logg_in():
         if "car" in logic_sys.log_in(
             {"email": email, "password": bcrypt.hashpw(password.encode("utf-8"), SALT)}
         ):
-
+            session['is_driver'] = True
             return redirect(url_for("orders"))
 
+        session['is_driver'] = False
         return redirect(url_for("choose_way"))
 
     return render_template("O_log-in.html")
@@ -198,7 +199,7 @@ def create_account():
             return render_template("O_sign-up.html")
 
         if not val.validate_password(password):
-            flash("You failed password(starts with numb or letter)")
+            flash("You failed password(maybe there are spaces)")
             return render_template("O_sign-up.html")
 
         if logic_sys.get_database.find_one({"email": email}):
@@ -229,7 +230,10 @@ def create_account():
         session["order_id"] = None
 
         if "car" in dct:
+            session['is_driver'] = True
             return redirect(url_for("orders"))
+
+        session['is_driver'] = False
         return redirect(url_for("choose_way"))
 
     return render_template("O_sign-up.html")
@@ -240,6 +244,8 @@ def choose_way():
     """
     deletes person from app
     """
+    if session['is_driver']:
+        return redirect(url_for("page_not_found"))
 
     city_list = []
 
@@ -487,9 +493,22 @@ def delete():
 
     return render_template("V_delete_account.html")
 
+
 @app.route("/history", methods=["GET"])
 def history():
-    return render_template("V_history.html")
+    """
+    user history page
+    """
+    order_list = []
+    all_orders = list(logic_sys.trips_database.find({}))
+
+    for order in all_orders:
+        if order["user_id"] == ObjectId(session["my_id"]):
+            order['naming'] = ' - '.join(order['waypoints_list'])
+            order_list.append(order)
+
+    return render_template("V_history.html", order_list = order_list)
+
 
 @app.route("/main")
 def main():
