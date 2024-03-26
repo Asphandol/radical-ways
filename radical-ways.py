@@ -289,6 +289,10 @@ def user_map():
 
     city_list = session["city_list"]
 
+    if not city_list:
+        flash("Not enough data, create new order")
+        return render_template("V_user_map.html", city_list=[])
+
     if request.method == "POST":
 
         action = request.form["action"]
@@ -310,6 +314,11 @@ def user_map():
             session["order_id"] = str(
                 logic_sys.trips_database.find_one(order_info)["_id"]
             )
+
+            order_info["user_id"] = str(order_info["user_id"])
+            order_info["_id"] = str(order_info["_id"])
+
+            session["order_info"] = order_info
 
             session["city_list"] = None
 
@@ -355,9 +364,6 @@ def check_trip_status():
     to help work with
     ajax on JS
     """
-    if session["is_driver"]:
-        return redirect(url_for("error"))
-
     trip_id = ObjectId(session["order_id"])
     trip_info = logic_sys.trips_database.find_one(trip_id)
     if trip_info["status"] == "taken":
@@ -623,7 +629,12 @@ def orders():
     all_orders = list(logic_sys.trips_database.find({}))
 
     for i in all_orders:
-        if len(order_list) != 3 and i["status"] == "created" and not i["driver"]:
+        if (
+            len(order_list) != 3
+            and i["status"] == "created"
+            and not i["driver"]
+            and i["waypoints_list"]
+        ):
             i["_id"] = str(i["_id"])
             i["user_id"] = str(i["user_id"])
             i["naming"] = " - ".join(i["waypoints_list"])

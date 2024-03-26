@@ -12,6 +12,13 @@
 <body>
     <div class="map-and-buttons">
         <div id="map" class="map"></div>
+        {% if get_flashed_messages() %}
+        <div class="flash" style="width: 50%;">
+            {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
         <form action='/user_map' method="post">
             <div class="buttons">
                 <button method='submit' name="action" value="button1" class="button">Create different order</button>
