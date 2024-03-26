@@ -265,13 +265,21 @@ def choose_way():
             flash("There is no such end place")
             return render_template("M_user.html")
 
-        for place in waypoints:
+        waypoints1 = waypoints.copy()
+        for place in waypoints1:
+
+            if place == start1:
+                waypoints.remove(start1)
+
+            if place == end:
+                waypoints.remove(end)
+
             if not check_city_existence(place):
                 waypoints.remove(place)
 
         map1 = Map(start1, end, waypoints)
         city_list = map1.take_map_data()
-
+        print(city_list)
         session["city_list"] = city_list
 
         return redirect(url_for("user_map"))
@@ -289,10 +297,6 @@ def user_map():
 
     city_list = session["city_list"]
 
-    if not city_list:
-        flash("Not enough data, create new order")
-        return render_template("V_user_map.html", city_list=[])
-
     if request.method == "POST":
 
         action = request.form["action"]
@@ -300,6 +304,10 @@ def user_map():
         if action == "button1":
             session["city_list"] = None
             return redirect(url_for("choose_way"))
+
+        if not city_list:
+            flash("Failed to create a route")
+            return render_template("V_user_map.html", city_list=[])
 
         if action == "button2":
 
@@ -323,6 +331,10 @@ def user_map():
             session["city_list"] = None
 
             return redirect(url_for("searching"))
+
+    if not city_list:
+        flash("Not enough data, create new order")
+        return render_template("V_user_map.html", city_list=[])
 
     return render_template("V_user_map.html", city_list=city_list)
 
@@ -463,9 +475,6 @@ def rejected():
     if "order_info" not in session:
         return redirect(url_for("error"))
 
-    if not session["order_info"]:
-        return redirect(url_for("error"))
-
     if request.method == "POST":
 
         logic_sys.get_database.update_one(
@@ -490,9 +499,6 @@ def over():
     appears if the order was overed
     """
     if "order_info" not in session:
-        return redirect(url_for("error"))
-
-    if not session["order_info"]:
         return redirect(url_for("error"))
 
     if request.method == "POST":
@@ -642,7 +648,25 @@ def orders():
         elif len(order_list) == 3:
             break
 
+    session["cities"] = order_list
+
     return render_template("M_driver.html", order_list=order_list)
+
+
+@app.route("/check_orders_status", methods=["POST", "GET"])
+def check_orders():
+    """
+    check orders
+    """
+    for order in session["cities"]:
+        if (
+            logic_sys.trips_database.find_one({"_id": ObjectId(order["_id"])})
+            != "created"
+        ):
+
+            return jsonify({"status": "changed"})
+
+    return jsonify({"status": "nothing_changed"})
 
 
 @app.route("/driver_map", methods=["POST", "GET"])
@@ -817,7 +841,7 @@ class Map:
         """
         makes a shortest path
         """
-
+        print(graph)
         if not graph:
             return [start1, end]
 
@@ -850,4 +874,4 @@ class Map:
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)

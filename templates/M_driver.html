@@ -17,9 +17,9 @@
         <div id="orders" class="title-and-orders">
             <h2>Current orders:</h2>
             {% for m in order_list %}
-                <form action = '/driver_page' method = 'post'>
-                    <button method='submit' name = 'button' value = '{{ m|tojson }}' class='order'>{{m['naming']}}</button>
-                </form>
+            <form action='/driver_page' method='post'>
+                <button method='submit' name='button' value='{{ m|tojson }}' class='order'>{{m['naming']}}</button>
+            </form>
             {% endfor %}
         </div>
     </div>
@@ -27,6 +27,28 @@
         <img class="profile" onclick="window.location.href='/profile'"
             src="{{ url_for('static', filename='assets/transperent_person.png') }}">
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function checkTripStatus() {
+                $.ajax({
+                    url: '/check_orders_status',
+                    method: 'GET',
+                    success: function (data) {
+                        if (data.status === 'changed') {
+                            window.location.replace("/driver_page");
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error occurred:", error);
+                    }
+                });
+            }
+
+            setInterval(checkTripStatus, 1000);
+        });
+    </script>
 
 </body>
 
