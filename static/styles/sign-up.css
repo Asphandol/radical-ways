@@ -11,6 +11,12 @@ h2 {
     text-align: center;
 }
 
+
+h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .input-field {
     margin-bottom: 10px;
     width: calc(100% - 10px);

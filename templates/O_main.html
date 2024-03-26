@@ -12,15 +12,12 @@
     <div class="logo">
         <img src="{{ url_for('static', filename='assets/logo.png') }}">
     </div>
-    {% if city_list %}
-        <div id="map" style="height: 400px; width: 100%;"></div>
-    {% endif %}
     <div class="order-container">
         <h1>{{ route }}</h1>
         <form action='/in_way' method='post'>
+            <div id="map" class="map"></div>
             <div class="buttons">
                 <button class="button" type='submit' name='action' value="button2">Reject</button>
-                <button class="button" type='submit' name='action' value="button3">See on a map</button>
                 <button class="button" type='submit' name='action' value="button1">Finish order</button>
             </div>
         </form>
@@ -33,17 +30,17 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             function checkTripStatus() {
                 $.ajax({
                     url: '/driver_dynamic_status',
                     method: 'GET',
-                    success: function(data) {
+                    success: function (data) {
                         if (data.status === 'declined') {
                             window.location.replace("/rejected");
                         }
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log("Error occurred:", error);
                     }
                 });
@@ -59,10 +56,10 @@
                 center: { lat: -34.397, lng: 150.644 },
                 zoom: 8
             });
-    
+
             var city_list = {{ city_list | tojson
         }};
-    
+
         for (var i = 0; i < city_list.length - 1; i++) {
             var directionsService = new google.maps.DirectionsService();
             var request = {
@@ -80,7 +77,7 @@
         }
     }
     </script>
-    
+
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZLOb5jlcg6kuiu7ovzBg6yAdjwkcqfAA&callback=initMap"></script>
 </body>
