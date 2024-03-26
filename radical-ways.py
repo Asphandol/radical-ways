@@ -278,10 +278,11 @@ def choose_way():
 
     return render_template("M_user.html")
 
+
 @app.route("/user_map", methods=["POST", "GET"])
 def user_map():
     """
-    render template for user 
+    render template for user
     """
     if session["is_driver"]:
         return redirect(url_for("error"))
@@ -314,7 +315,8 @@ def user_map():
 
             return redirect(url_for("searching"))
 
-    return render_template("V_user_map.html", city_list = city_list)
+    return render_template("V_user_map.html", city_list=city_list)
+
 
 @app.route("/driver_searching", methods=["POST", "GET"])
 def searching():
@@ -330,7 +332,7 @@ def searching():
         action = request.form["action"]
 
         if action == "button":
-            logic_sys.trips_database.delete_one(ObjectId(session["order_id"]))
+            logic_sys.trips_database.delete_one({"_id": trip_id})
             session["order_id"] = None
             return redirect(url_for("choose_way"))
 
@@ -471,7 +473,7 @@ def rejected():
             return redirect(url_for("orders"))
         return redirect(url_for("choose_way"))
 
-    if session['is_driver']:
+    if session["is_driver"]:
         return render_template("V_rejected_driver.html")
     return render_template("M_rejected_user.html")
 
@@ -559,8 +561,9 @@ def history():
     all_orders = list(logic_sys.trips_database.find({}))
 
     for order in all_orders:
-        if order["user_id"] == ObjectId(session["my_id"]) or\
-        order["driver"] == ObjectId(session["my_id"]):
+        if order["user_id"] == ObjectId(session["my_id"]) or order[
+            "driver"
+        ] == ObjectId(session["my_id"]):
             order["naming"] = " - ".join(order["waypoints_list"])
             order_list.append(order)
 
