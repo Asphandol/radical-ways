@@ -452,6 +452,12 @@ def rejected():
     """
     appears if the order was rejected
     """
+    if "order_info" not in session:
+        return redirect(url_for("error"))
+
+    if not session["order_info"]:
+        return redirect(url_for("error"))
+
     if request.method == "POST":
 
         logic_sys.get_database.update_one(
@@ -465,7 +471,9 @@ def rejected():
             return redirect(url_for("orders"))
         return redirect(url_for("choose_way"))
 
-    return render_template("M_rejected.html")
+    if session['is_driver']:
+        return render_template("V_rejected_driver.html")
+    return render_template("M_rejected_user.html")
 
 
 @app.route("/finish", methods=["POST", "GET"])
@@ -473,6 +481,12 @@ def over():
     """
     appears if the order was overed
     """
+    if "order_info" not in session:
+        return redirect(url_for("error"))
+
+    if not session["order_info"]:
+        return redirect(url_for("error"))
+
     if request.method == "POST":
 
         logic_sys.get_database.update_one(
