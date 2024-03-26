@@ -525,7 +525,8 @@ def history():
     all_orders = list(logic_sys.trips_database.find({}))
 
     for order in all_orders:
-        if order["user_id"] == ObjectId(session["my_id"]):
+        if order["user_id"] == ObjectId(session["my_id"]) or\
+        order["driver"] == ObjectId(session["my_id"]):
             order["naming"] = " - ".join(order["waypoints_list"])
             order_list.append(order)
 
