@@ -6,6 +6,7 @@
     padding: 20px;
     box-sizing: border-box;
     text-align: center;
+    overflow-y: auto;
 }
 
 h1 {

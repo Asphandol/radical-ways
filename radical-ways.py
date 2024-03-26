@@ -403,7 +403,7 @@ def your_driver():
         if action == "see_map":
 
             city_list = logic_sys.trips_database.find_one(
-                {"user_id": ObjectId(session["my_id"])}
+                {"_id": ObjectId(session["order_id"])}
             )["waypoints_list"]
 
             return render_template(
@@ -850,4 +850,4 @@ class Map:
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)

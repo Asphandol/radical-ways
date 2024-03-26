@@ -49,6 +49,7 @@ body {
     right: 10px;
     width: 100px;
     height: auto;
+    cursor: pointer;
 }
 
 .flash {
