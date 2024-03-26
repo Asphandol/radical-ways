@@ -251,22 +251,19 @@ def choose_way():
     if session["is_driver"]:
         return redirect(url_for("error"))
 
-    city_list = []
-
     if request.method == "POST":
 
-        action = request.form["action"]
         start1 = request.form["start"]
         end = request.form["end"]
         waypoints = request.form["waypoints"].split(", ")
 
         if not check_city_existence(start1):
             flash("There is no such start place")
-            return render_template("M_user.html", city_list=[])
+            return render_template("M_user.html")
 
         if not check_city_existence(end):
             flash("There is no such end place")
-            return render_template("M_user.html", city_list=[])
+            return render_template("M_user.html")
 
         for place in waypoints:
             if not check_city_existence(place):
@@ -275,8 +272,29 @@ def choose_way():
         map1 = Map(start1, end, waypoints)
         city_list = map1.take_map_data()
 
+        session["city_list"] = city_list
+
+        return redirect(url_for("user_map"))
+
+    return render_template("M_user.html")
+
+@app.route("/user_map", methods=["POST", "GET"])
+def user_map():
+    """
+    render template for user 
+    """
+    if session["is_driver"]:
+        return redirect(url_for("error"))
+
+    city_list = session["city_list"]
+
+    if request.method == "POST":
+
+        action = request.form["action"]
+
         if action == "button1":
-            return render_template("M_user.html", city_list=city_list)
+            session["city_list"] = None
+            return redirect(url_for("choose_way"))
 
         if action == "button2":
 
@@ -291,10 +309,12 @@ def choose_way():
             session["order_id"] = str(
                 logic_sys.trips_database.find_one(order_info)["_id"]
             )
+
+            session["city_list"] = None
+
             return redirect(url_for("searching"))
 
-    return render_template("M_user.html", city_list=[])
-
+    return render_template("V_user_map.html", city_list = city_list)
 
 @app.route("/driver_searching", methods=["POST", "GET"])
 def searching():
