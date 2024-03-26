@@ -162,10 +162,14 @@ def logg_in():
         if "car" in logic_sys.log_in(
             {"email": email, "password": bcrypt.hashpw(password.encode("utf-8"), SALT)}
         ):
-            session["is_driver"] = True
+            session['is_driver'] = True
+            if session["order_id"]:
+                return redirect(url_for("in_way_process"))
             return redirect(url_for("orders"))
 
-        session["is_driver"] = False
+        session['is_driver'] = False
+        if session["order_id"]:
+                return redirect(url_for("your_driver"))
         return redirect(url_for("choose_way"))
 
     return render_template("O_log-in.html")
@@ -230,10 +234,10 @@ def create_account():
         session["order_id"] = None
 
         if "car" in dct:
-            session["is_driver"] = True
+            session['is_driver'] = True
             return redirect(url_for("orders"))
 
-        session["is_driver"] = False
+        session['is_driver'] = False
         return redirect(url_for("choose_way"))
 
     return render_template("O_sign-up.html")
@@ -244,7 +248,7 @@ def choose_way():
     """
     deletes person from app
     """
-    if session["is_driver"]:
+    if session['is_driver']:
         return redirect(url_for("error"))
 
     city_list = []
@@ -297,7 +301,7 @@ def searching():
     """
     searches for the driver
     """
-    if session["is_driver"]:
+    if session['is_driver']:
         return redirect(url_for("error"))
 
     if request.method == "POST":
@@ -329,7 +333,7 @@ def check_trip_status():
     to help work with
     ajax on JS
     """
-    if session["is_driver"]:
+    if session['is_driver']:
         return redirect(url_for("error"))
 
     trip_id = ObjectId(session["order_id"])
@@ -349,8 +353,16 @@ def your_driver():
     """
     renders your driver page
     """
-    if session["is_driver"]:
+    if session['is_driver']:
         return redirect(url_for("error"))
+
+    if "order_info" not in session:
+        route_info = logic_sys.trips_database.find_one(ObjectId(session["order_id"]))
+        route_info["_id"] = str(route_info["_id"])
+        route_info["user_id"] = str(route_info["user_id"])
+        route_info["driver"] = str(route_info["driver"])
+        session["order_info"] = route_info
+        session["driver_id"] = route_info["driver"]
 
     driver_info = logic_sys.get_database.find_one(ObjectId(session["driver_id"]))
     car_type = driver_info["car"]
@@ -464,12 +476,13 @@ def profile():
 
         if action == "b2":
             info = logic_sys.get_database.find_one({"_id": ObjectId(session["my_id"])})
-            print(info)
             cur_order = info["order_id"]
+
             if "car" in info:
                 if cur_order:
-                    return redirect(url_for("main"))
+                    return redirect(url_for("in_way_process"))
                 return redirect(url_for("orders"))
+
             if cur_order:
                 return redirect(url_for("your_driver"))
             return redirect(url_for("choose_way"))
@@ -513,18 +526,10 @@ def history():
 
     for order in all_orders:
         if order["user_id"] == ObjectId(session["my_id"]):
-            order["naming"] = " - ".join(order["waypoints_list"])
+            order['naming'] = ' - '.join(order['waypoints_list'])
             order_list.append(order)
 
-    return render_template("V_history.html", order_list=order_list)
-
-
-@app.route("/main")
-def main():
-    """
-    main page
-    """
-    return render_template("O_main.html")
+    return render_template("V_history.html", order_list = order_list)
 
 
 @app.route("/get_help", methods=["POST", "GET"])
@@ -567,13 +572,12 @@ def orders():
     """
     shows all orders for drivers
     """
-    if not session["is_driver"]:
+    if not session['is_driver']:
         return redirect(url_for("error"))
 
     if request.method == "POST":
         m_json = request.form["button"]
         session["order_info"] = json.loads(m_json)
-        print(session["order_info"])
         return redirect(url_for("driver_map"))
 
     order_list = []
@@ -633,7 +637,7 @@ def driver_dynamic_status():
     """
     checks during trip status
     """
-    if not session["is_driver"]:
+    if not session['is_driver']:
         return redirect(url_for("error"))
 
     trip_id = {"_id": ObjectId(session["order_info"]["_id"])}
@@ -650,8 +654,17 @@ def in_way_process():
     """
     represents driver in a way
     """
-    if not session["is_driver"]:
+    if not session['is_driver']:
         return redirect(url_for("error"))
+
+    if "order_info" not in session:
+        route_info = logic_sys.trips_database.find_one(ObjectId(session["order_id"]))
+        route_info["_id"] = str(route_info["_id"])
+        route_info["user_id"] = str(route_info["user_id"])
+        route_info["driver"] = str(route_info["driver"])
+        session["order_info"] = route_info
+
+    route = " - ".join(session["order_info"]["waypoints_list"])
 
     if request.method == "POST":
 
@@ -687,8 +700,7 @@ def in_way_process():
             city_list = session["order_info"]["waypoints_list"]
             return render_template("O_main.html", city_list=city_list)
 
-    return render_template("O_main.html", city_list=[])
-
+    return render_template("O_main.html", route = route, city_list=[])
 
 @app.route("/error")
 def error():
@@ -696,7 +708,6 @@ def error():
     error page
     """
     return render_template("V_not_found.html")
-
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -790,4 +801,4 @@ class Map:
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port)
