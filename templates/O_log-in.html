@@ -18,11 +18,11 @@
     <div class="container">
         <h2>Log in</h2>
         {% if get_flashed_messages() %}
-            <div class="flash">
-                {% for msg in get_flashed_messages() %}
-                <div>{{msg}}</div>
-                {% endfor %}
-            </div>
+        <div class="flash">
+            {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+            {% endfor %}
+        </div>
         {% endif %}
         <form action='/log_in' method='post'>
             <div class="input-container">
@@ -31,6 +31,9 @@
                 <button method='submit' class="button">Log in</button>
             </div>
         </form>
+        <div class="link-container">
+            <a href="/sign_up">sign-up instead</a>
+        </div>
     </div>
 </body>
 

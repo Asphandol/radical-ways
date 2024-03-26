@@ -24,3 +24,15 @@ h2 {
 .input-container {
     text-align: center;
 }
+
+.link-container {
+    text-align: right;
+}
+
+a {
+    color: #8d8d8d;
+}
+
+a:hover {
+    color: 569DAA;
+}

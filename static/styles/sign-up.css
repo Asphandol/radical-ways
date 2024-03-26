@@ -92,3 +92,15 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: center;
 }
+
+.link-container {
+    text-align: right;
+}
+
+a {
+    color: #8d8d8d;
+}
+
+a:hover {
+    color: 569DAA;
+}
