@@ -21,11 +21,15 @@
     <div class="container">
         <div id="orders" class="title-and-orders">
             <h2>Current orders:</h2>
-            {% for m in order_list %}
-            <form action='/driver_page' method='post'>
-                <button method='submit' name='button' value='{{ m|tojson }}' class='order'>{{m['naming']}}</button>
-            </form>
-            {% endfor %}
+            {% if order_list%}
+                {% for m in order_list %}
+                <form action='/driver_page' method='post'>
+                    <button method='submit' name='button' value='{{ m|tojson }}' class='order'>{{m['naming']}}</button>
+                </form>
+                {% endfor %}
+            {% else %}
+                <h4>No available orders</h4>
+            {% endif %}
         </div>
     </div>
     <div>
