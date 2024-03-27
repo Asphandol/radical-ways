@@ -18,6 +18,7 @@ h4 {
 }
 
 .input-field {
+    font-family: "Montserrat", sans-serif;
     margin-bottom: 10px;
     width: calc(100% - 10px);
     padding: 5px;

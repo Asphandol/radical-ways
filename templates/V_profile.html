@@ -2,10 +2,16 @@
 <html lang="en">
 
 <head>
+    <title>Profile</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -19,7 +25,8 @@
             </form>
             <li><a href="/delete_account" style="font-weight: bold;">Delete Account</a></li>
             <form action='/profile' method='post'>
-                <li><button method='submit' name='action' value='b2' style="font-weight: bold;">Current Trip</a></li>
+                <li><button method='submit' name='action' value='b2' style="font-weight: bold;">Current Trip</button>
+                </li>
             </form>
             <li><a href="/change_info" style="font-weight: bold;">Change Info</a></li>
             <li><a href="/history" style="font-weight: bold;">History of Trips</a></li>

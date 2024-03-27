@@ -7,6 +7,11 @@
     <title>Searching for driver...</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/searching.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -16,23 +21,23 @@
     <div class="container">
         <h1>Searching for a driver</h1>
         <form action='/driver_searching' method='post'>
-            <button method = 'submit' class="button" name = 'action' value = 'button'>Cancel the trip</button>
+            <button method='submit' class="button" name='action' value='button'>Cancel the trip</button>
         </form>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             function checkTripStatus() {
                 $.ajax({
                     url: '/check_trip_status',
                     method: 'GET',
-                    success: function(data) {
+                    success: function (data) {
                         if (data.status === 'taken') {
-                        window.location.replace("/your_driver");
-                    }
+                            window.location.replace("/your_driver");
+                        }
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log("Error occurred:", error);
                     }
                 });

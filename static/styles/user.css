@@ -11,6 +11,7 @@
 }
 
 .input-field {
+    font-family: "Montserrat", sans-serif;
     margin-bottom: 10px;
     width: 49%;
     padding: 5px;
@@ -21,6 +22,7 @@
 }
 
 .output-field {
+    font-family: "Montserrat", sans-serif;
     background-color: #fff;
     width: auto;
     padding: 5px;
@@ -58,6 +60,7 @@ a {
 }
 
 .button {
+    font-family: "Montserrat", sans-serif;
     margin: 1%;
 }
 

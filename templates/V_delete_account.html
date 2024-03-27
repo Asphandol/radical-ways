@@ -7,6 +7,11 @@
     <title>Delete Account</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/delete.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -16,11 +21,11 @@
     <div class="delete-account-container">
         <h2>Delete Account</h2>
         {% if get_flashed_messages() %}
-            <div class="flash">
-                {% for msg in get_flashed_messages() %}
-                <div>{{msg}}</div>
-                {% endfor %}
-            </div>
+        <div class="flash">
+            {% for msg in get_flashed_messages() %}
+            <div>{{msg}}</div>
+            {% endfor %}
+        </div>
         {% endif %}
         <div class="profile-container">
             <form action='/delete_account' method="post">
